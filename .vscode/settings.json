@@ -1,0 +1,5 @@
+{
+    "editor.mouseWheelZoom": true,
+    "workbench.activityBar.location": "top",
+    "workbench.activityBar.iconClickBehavior": "focus"
+}
