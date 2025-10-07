@@ -1,5 +1,5 @@
 from flask import Flask,render_template
-from models import db,User,Person,Patient,Doctor,Department,Appointment,Treatment
+from models import db,Patient,Doctor,Department,Appointment,Treatment
 
 app=Flask(__name__)
 
