@@ -1,13 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register page </title>
+    <title>Patient registeration page</title>
 </head>
+
 <body>
-    <p>
-        Register page is created
-    </p>
+    <center>
+        <h1 id="heading"><u>Patient registeration page</u></h1>
+    </center>
+    <hr>
+    <div id="div1">
+        <form action="/register" method="POST">
+            <fieldset class="form>">
+                <legend>Username details</legend>
+                <table>
+                    <tr>
+                        <td><label for="username" class="form">Username</label></td>
+                        <td><input type="text" id="username" name="username" class="=form"></td>
+                    </tr>
+                    <tr>
+                        <td> <label for="password" class="form">Password</label></td>
+                        <td><input type="password" id="password" name="password" class="form"></td>
+                    </tr>
+                </table>
+            </fieldset>
+            <fieldset class="form">
+                <legend>
+                    Personal details
+                </legend>
+                <table width="100%">
+                    <tr>
+                        <td>
+                            <label for="name">Full name</label>
+                        </td>
+                        <td>
+                            <input type="text" id="name" name="name">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="contact">Contact</label>
+                        </td>
+                        <td>
+                            <input type="text" id="contact" name="contact">
+                        </td>
+                        <td>
+                            <label for="email">Email id</label>
+                        </td>
+                        <td>
+                            <input type="text" id="email" name="email">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="address1">Address Line1</label>
+                        </td>
+                        <td>
+                            <input type="text" id="address1">
+                        </td>
+                        <td>
+                            <label for="address1">Address Line1</label>
+                        </td>
+                        <td>
+                            <input type="text" id="address2">
+                        </td>
+
+                    </tr>
+
+                </table>
+            </fieldset>
+            <input type="submit" value="Register">
+        </form>
+        <p>Already a user?</p>
+
+        <form action="{{ url_for('login') }}" method="get">
+            <button type="submit" value="login">Log in</button>
+        </form>
+    </div>
 </body>
+
 </html>

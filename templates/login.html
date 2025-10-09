@@ -1,13 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login page</title>
+    <style>
+        h1 {
+            text-align: center;
+            border: 3px solid black;
+            border-radius: 10px;
+            background-color: azure;
+            width: 50vw;
+            position: relative;
+            left: 25vw;
+        }
+
+        #div1 {
+            border: 3px solid black;
+            border-radius: 10px;
+            height: 500px;
+            width: 400px;
+            background-color: azure;
+            position: relative;
+            top: 10vh;
+            left: 40vw;
+            /* margin: 10px;
+            padding: 10px;
+            align-content: center;
+            align-self: center; */
+        }
+
+        .form {
+            text-align: center;
+            position: relative;
+        }
+
+        #div2 {}
+    </style>
 </head>
-<body>
+
+<body style="background-color: rgba(246, 26, 26, 0.309)"">
     <h1>Login portal page</h1>
-    <p>It is the login page of the portal </p>
-    
+    <hr >
+    <div id=" div1">
+    <form action="/login" method="POST">
+        <h2 id="div_header">Login portal</h2>
+        <select id="role" name="role">
+            <option value="patient">Patient</option>
+            <option value="doctor">Doctor</option>
+            <option value="admin">Admin</option>
+        </select>
+        <br>
+        <label for="username" class="form">Username</label>
+        <br>
+        <input type="text" id="username" name="username" class="=form">
+        <br>
+        <label for="password" class="form">Password</label>
+        <br>
+        <input type="password" id="password" name="password" class="form">
+        <br>
+        <div id="div2">
+            <text class="form">New user? <form action="redirect({{ url_for('register') }})" method="get">
+                    <button type="submit" value="register">Register as new user</button>
+                </form></text>
+            <br>
+            <button id="botton" class="form">Log in</button>
+        </div>
+    </form>
+    </div>
 </body>
+
 </html>

@@ -13,6 +13,9 @@ class Admin(db.Model):
     # One Admin can create many doctors
     doctors = db.relationship('Doctor', backref='created_by', lazy=True)
 
+    ## One Admin can create many dept
+    depts = db.relationship('Department', backref='created_by', lazy=True)
+
 
 class Doctor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -29,13 +32,13 @@ class Doctor(db.Model):
     admin_id = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=False)
 
     #link to department
-    dept_id=db.column(db.Integer,db.ForeignKey('dept.id'),nullable=False)
+    dept_id=db.Column(db.Integer,db.ForeignKey('department.id'),nullable=False)
 
     # Doctor has many appointments
-    schedules = db.relationship('Schedule', backref='doctor', lazy=True)
+    schedules = db.relationship('Schedule_doctors', backref='doctor', lazy=True)
 
     # Appointment request by patient
-    appointment = db.relationship('Appointmemt', backref='doctor', lazy=True)
+    appointment = db.relationship('Appointment', backref='doctor', lazy=True)
 
     
 
@@ -59,7 +62,11 @@ class Schedule_doctors(db.Model):
     doctor_availability = db.Column(db.Integer, nullable=False)
 
     # Belongs to one doctor
-    doct_id = db.Column(db.Integer, db.ForeignKey('doct.id'), nullable=False)
+    doct_id = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=False)
+
+    #giving schedule data for taking appointment availability
+    appointment=db.relationship('Appointment')
+
 
 class Appointment(db.Model):
     id=db.Column(db.Integer,primary_key=True)
@@ -67,13 +74,16 @@ class Appointment(db.Model):
     date=db.Column(db.Integer,nullable=False)
     time=db.Column(db.Integer,nullable=False)
 
-    patient_id=db.Column(db.Integer,nullable=False,unique=True)
-    doctor_id=db.Column(db.Integer,nullable=False,unique=True)
+    patient_id=db.Column(db.Integer,db.ForeignKey('patient.id'),nullable=False,unique=True)
+    doctor_id=db.Column(db.Integer,db.ForeignKey('doctor.id'),nullable=False,unique=True)
+    
     
     status=db.Column(db.String(20),default="pending",nullable=False)
 
-    #appointment references a doctor
-    doctor=db.relationship('Schedule',backref='appointment')
+    #schedule time createed by doctor
+    schedule=db.Column(db.Integer,db.ForeignKey('schedule_doctors.id'))
+    #doctors create treatment of patient
+    treatment=db.relationship('Treatment',backref='doctor')
 
 class Department(db.Model):
     id=db.Column(db.Integer,primary_key=True)
@@ -81,9 +91,19 @@ class Department(db.Model):
     description=db.Column(db.String(),nullable=False)
     reg_doctors_id=db.Column(db.Integer,nullable=False)
 
+    #every doctor refers to a department
+    doctors=db.relationship('Doctor',lazy=True)
+
+    # Link to Admin
+    admin_id = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=False)
+
 class Treatment(db.Model):
     id=db.Column(db.Integer,primary_key=True)
-    appt_id=db.column(db.Integer,nullable=False,unique=True)
     diagonsis=db.Column(db.String(),nullable=False)
     prescription=db.Column(db.String(),nullable=False)
     notes=db.Column(db.String(),nullable=False)
+
+    #appointment refers to the doctor details 
+    appt_id=db.Column(db.Integer,db.ForeignKey('appointment.id'),nullable=False)
+
+
