@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Edit Patient's details</h2>
+<h4>Patient ID: {{ patient.id }}</h4>
+<form action="/edit_patient/{{ patient.id }}" method="post">
+    <table border="2px" style="border:2px solid black; width:70%; margin:20px; padding: auto; cell-spacing:10px;">
+        <thead>
+            <tr>
+                <td>
+                    <label for="username">Username:</label>
+                </td>
+                <td>
+                    <input type="text" id="username" name="username" value="{{ patient.username }}" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="password">Password:</label>
+                </td>
+                <td>
+                    <input type="password" id="password" name="password" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="email">Email</label>
+                </td>
+                <td>
+                    <input type="text" id="email" value="{{ patient.email }}" name="email" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="contact">Contact:</label>
+                </td>
+                <td>
+                    <input type="text" id="contact" name="contact" value="{{ patient.contact }}" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <select name="status" id="status">
+                        <option value="active" {% if patient.status=='active' %}selected{% endif %}>Active</option>
+                        <option value="blacklist" {% if patient.status=='blacklist' %}selected{% endif %}>Blacklist
+                        </option>
+                        <option value="removed">Removed</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Update Patient">
+                </td>
+                <td>
+                    <a href="/admin_dashboard">Cancel</a>
+                </td>
+            </tr>
+    </table>
+</form>
+{% endblock %}

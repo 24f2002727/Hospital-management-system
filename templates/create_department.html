@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{%block content%}
+<h1>Create New Department</h1>
+<div>
+    <form action="/create_department" method="POST">
+        <table>
+            <tr>
+                <td><label for="name">Department Name</label></td>
+                <td><input type="text" id="name" name="name" required></td>
+            </tr>
+            <tr>
+                <td><label for="description" >Description</label></td>
+                <td><input type="text" id="description" name="description"></td>
+            </tr>
+            <tr>
+                <td><label for="building">Building</label></td>
+                <td><input type="text" id="building" name="building"></td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Create Department">
+                </td>
+                <td>
+                    <a href="/admin_dashboard">Cancel</a>
+                </td>
+            </tr>
+
+</div>
+        </table>
+    </form>
+{%endblock%}

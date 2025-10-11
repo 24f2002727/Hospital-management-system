@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+<center>
+    <h1 id="heading"><u>Doctor creation page</u></h1>
+</center>
+<hr>
+<form action="/create_doctor" method="POST">
+    <fieldset>
+        <legend>Username details</legend>
+        <table>
+            <tr>
+                <td><label for="username" class="form">Username</label></td>
+                <td><input type="text" id="username" name="username" class="=form"></td>
+            </tr>
+            <tr>
+                <td> <label for="password" class="form">Password</label></td>
+                <td><input type="password" id="password" name="password" class="form"></td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset>
+        <legend>
+            Personal details
+        </legend>
+        <table width="100%">
+            <tr>
+                <td><label for="email">Email</label></td>
+                <td><input type="text" id="email" name="email"></td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="contact">Contact</label>
+                </td>
+                <td>
+                    <input type="text" id="contact" name="contact">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="dept_id">Department</label>
+                </td>
+                <td>
+                    <input type="text" id="dept_id" name="dept_id">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="name">Full name</label>
+                </td>
+                <td>
+                    <input type="text" id="name" name="name">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="address1">Address Line1</label>
+                </td>
+                <td>
+                    <input type="text" id="address1" name="address1">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button onclick="location.href='/admin_dashboard'">Create New Docter</button>
+                </td>
+                <td>
+                    <a href="/admin_dashboard">Cancel</a>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    </form>
+    {% endblock %}

@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient registeration page</title>
-</head>
-
+{% extends "base.html" %}
+{% block content %}
 <body>
     <center>
         <h1 id="heading"><u>Patient registeration page</u></h1>
@@ -74,12 +67,14 @@
             </fieldset>
             <input type="submit" value="Register">
         </form>
+        
+    </div>
+    <div>
         <p>Already a user?</p>
-
-        <form action="{{ url_for('login') }}" method="get">
-            <button type="submit" value="login">Log in</button>
+        <form action="/login" method="get">
+            <input type="submit" value="Just login here">
         </form>
+
     </div>
 </body>
-
-</html>
+{% endblock %}

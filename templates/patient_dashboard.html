@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+Patient Dashboard
+{% endblock %}
+{% block body %}
+    <h1>Welcome {{patient.username}}</h1>
+    <h2>Your Appointments</h2>
+    <table border="2px" style="border:2px solid black; width:100%; margin-top:20px;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Doctor Name</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in appointments %}
+            <tr>
+                <td>{{ appointment.id }}</td>
+                <td>{{appointment.date}}</td>
+                <td>{{appointment.time}}</td>
+                <td>{{appointment.docter_id}}</td>
+                <td>{{appointment.patient_id}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

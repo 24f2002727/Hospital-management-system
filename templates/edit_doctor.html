@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Edit Doctor's details</h2>
+<h4>Doctor ID: {{ doctor.id }}</h4>
+<form action="/edit_doctor/{{ doctor.id }}" method="post">
+    <table border="2px" style="border:2px solid black; width:70%; margin:20px; padding: auto; cell-spacing:10px;">
+        <thead>
+            <tr>
+                <td>
+                    <label for="username">Username:</label>
+                </td>
+                <td>
+                    <input type="text" id="username" name="username" value="{{ doctor.username }}" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="password">Password:</label>
+
+                </td>
+                <td><input type="password" id="password" name="password" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <label for="email">Email</label>
+            </td>
+            <td>
+                <input type="email" id="email" name="email" value="{{ doctor.email }}" required>
+            </td>
+            <tr>
+                <td>
+                    <label for="contact">Contact:</label>
+                </td>
+                <td>
+                    <input type="text" id="contact" name="contact" value="{{ doctor.contact }}" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="dept_id">Department:</label>
+                </td>
+                <td>
+                    <input type="text" id="dept_id" name="dept_id" value="{{ doctor.dept_id}}" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <select name="status" id="status">
+                        <option value="active">Active</option>
+                        <option value="blacklist">Blacklist</option>
+                        <option value="removed">Removed</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Update Doctor">
+                </td>
+            </tr>
+        </thead>
+    </table>
+</form>
+{% endblock %}

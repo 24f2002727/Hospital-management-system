@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block content %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login page</title>
     <style>
         h1 {
             text-align: center;
@@ -25,18 +21,16 @@
             position: relative;
             top: 10vh;
             left: 40vw;
-            /* margin: 10px;
+            margin: 10px;
             padding: 10px;
             align-content: center;
-            align-self: center; */
+            align-self: center;
         }
 
         .form {
             text-align: center;
             position: relative;
         }
-
-        #div2 {}
     </style>
 </head>
 
@@ -54,21 +48,19 @@
         <br>
         <label for="username" class="form">Username</label>
         <br>
-        <input type="text" id="username" name="username" class="=form">
+        <input type="text" id="username" name="username">
         <br>
-        <label for="password" class="form">Password</label>
+        <label for="password">Password</label>
         <br>
-        <input type="password" id="password" name="password" class="form">
+        <input type="password" id="password" name="password">
         <br>
-        <div id="div2">
-            <text class="form">New user? <form action="redirect({{ url_for('register') }})" method="get">
-                    <button type="submit" value="register">Register as new user</button>
-                </form></text>
-            <br>
-            <button id="botton" class="form">Log in</button>
-        </div>
+        <input type="submit" value="Login">
     </form>
     </div>
-</body>
-
-</html>
+    <div>
+        <form action="/register" meyhod="get">
+            <p>New user?</p>
+            <input type="submit" value="Register here">
+        </form>
+    </div>
+{% endblock %}
