@@ -1,0 +1,9 @@
+#register_button{
+    margin-bottom: 20px;
+    padding: 10px 20px; 
+    background-color: #28a745; 
+    color: white; 
+    border: none; 
+    border-radius: 4px; 
+    cursor: pointer;
+}

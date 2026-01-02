@@ -1,30 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Docter Dashboard</title>
-</head>
-<body>
-    <h1>Welcome Doctor {{ doctor.name }}</h1>
-    <h2>Your Patients</h2>
-    <table border="2px" style="border:2px solid black; width:100%; margin-top:20px;">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Contact</th>
-                <th>Appointment</th>
-                <th>Treatment</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            {% for patient in patients %}
-            <tr>
-                <td>{{ patient.id }}</td>
-                td*
+{% extends 'base.html' %}
+{% block title %}Doctor Dashboard{% endblock %}
+
+{% block content %}
+<h2>Doctor Dashboard</h2>
+<p>Welcome, {{ doctor.username }}!</p>
+
+<!-- Profile Information -->
+<div style="background-color: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #dee2e6;">
+    <h3>Profile Information</h3>
+    <p><strong>Username:</strong> {{ doctor.username }}</p>
+    <p><strong>Email:</strong> {{ doctor.email }}</p>
+    <p><strong>Contact:</strong> {{ doctor.contact }}</p>
+    <p><strong>Storage Capacity:</strong> {{ doctor.storage_capacity }}</p>
+    <p><strong>Status:</strong> 
+        <span style="color: {% if doctor.status == 'active' %}green{% else %}red{% endif %}; font-weight: bold;">
+            {{ doctor.status|title }}
+        </span>
+    </p>
+</div>
+
+<!-- Availability Management -->
+<div style="background-color: #e8f4fd; padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #bee5eb;">
+    <h3>Manage Your Availability</h3>
+    {% set current_dates = doctor.open_dates %}
+    {% if current_dates %}
+        {% set dates_list = current_dates|from_json %}
+        <p><strong>Current Availability:</strong></p>
+        <ul style="margin: 10px 0;" id="availability-list">
+            {% for date in dates_list %}
+            <li style="margin: 5px 0;" id="avail-date-{{ loop.index0 }}">{{ date }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p style="color: #856404; background-color: #fff3cd; padding: 10px; border: 1px solid #ffeaa7; border-radius: 4px;">
+            <strong>No availability set.</strong> Please update your availability to let customers know when you're available.
+        </p>
+    {% endif %}
     
-</body>
-</html>
+    <button onclick="location.href='/update_availability'" 
+            style="margin-top: 15px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        Update Availability
+    </button>
+</div>
+
+<!-- Quick Actions -->
+<div style="margin: 30px 0;">
+    <h3>Quick Actions</h3>
+    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <button onclick="location.href='/update_availability'" 
+                style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Set Availability
+        </button>
+        <button onclick="location.href='/logout'" 
+                style="padding: 10px 20px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Logout
+        </button>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Format availability dates
+    {% if current_dates %}
+        {% set dates_list = current_dates|from_json %}
+        {% for date in dates_list %}
+        const dateElement = document.getElementById('avail-date-{{ loop.index0 }}');
+        if (dateElement) {
+            const dateObj = new Date('{{ date }}');
+            const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+            const formattedDate = dateObj.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            dateElement.textContent = `{{ date }} - ${dayName}, ${formattedDate}`;
+        }
+        {% endfor %}
+    {% endif %}
+});
+</script>
+
+{% endblock %}

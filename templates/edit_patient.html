@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<div style="background-color: #d0cdcc; padding: 20px; border-radius: 5px; width: 70%; margin: auto; box-shadow: 10px 8px 10px rgba(0, 0, 0, 0.196);>
 <h2>Edit Patient's details</h2>
 <h4>Patient ID: {{ patient.id }}</h4>
 <form action="/edit_patient/{{ patient.id }}" method="post">
@@ -41,15 +42,14 @@
                 <td>
                     <select name="status" id="status">
                         <option value="active" {% if patient.status=='active' %}selected{% endif %}>Active</option>
-                        <option value="blacklist" {% if patient.status=='blacklist' %}selected{% endif %}>Blacklist
-                        </option>
+                        <option value="blacklist" {% if patient.status=='blacklist' %}selected{% endif %}>Blacklist</option>
                         <option value="removed">Removed</option>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="submit" value="Update Patient">
+                    <input type="submit" value="Update Patient" style=" padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
                 </td>
                 <td>
                     <a href="/admin_dashboard">Cancel</a>
@@ -57,4 +57,5 @@
             </tr>
     </table>
 </form>
+</div>
 {% endblock %}

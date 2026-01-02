@@ -1,46 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <style>
-        h1 {
-            text-align: center;
-            border: 3px solid black;
-            border-radius: 10px;
-            background-color: azure;
-            width: 50vw;
-            position: relative;
-            left: 25vw;
-        }
 
-        #div1 {
-            border: 3px solid black;
-            border-radius: 10px;
-            height: 500px;
-            width: 400px;
-            background-color: azure;
-            position: relative;
-            top: 10vh;
-            left: 40vw;
-            margin: 10px;
-            padding: 10px;
-            align-content: center;
-            align-self: center;
-        }
-
-        .form {
-            text-align: center;
-            position: relative;
-        }
-    </style>
-</head>
-
-<body style="background-color: rgba(246, 26, 26, 0.309)"">
+<body>
     <h1>Login portal page</h1>
     <hr >
-    <div id=" div1">
+    <div id="div1">
+        <div>
     <form action="/login" method="POST">
-        <h2 id="div_header">Login portal</h2>
-        <select id="role" name="role">
+        <h2 id="div header">Login portal</h2>
+        <select id="role" name="role" class="btn btn-warning">
             <option value="patient">Patient</option>
             <option value="doctor">Doctor</option>
             <option value="admin">Admin</option>
@@ -54,13 +23,16 @@
         <br>
         <input type="password" id="password" name="password">
         <br>
-        <input type="submit" value="Login">
+        <br>
+        <input type="submit" id="login" class="btn btn-primary" value="Login">
     </form>
     </div>
-    <div>
-        <form action="/register" meyhod="get">
-            <p>New user?</p>
-            <input type="submit" value="Register here">
+    <div id="div2">
+        <form action="/register" method="get">
+            New user?
+            <input type="submit"  id="register" class="btn btn-success" value="Register here">
         </form>
     </div>
+    </div>
+    
 {% endblock %}

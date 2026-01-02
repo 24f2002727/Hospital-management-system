@@ -1,30 +1,24 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% block title %}Doctor Dashboard{% endblock %}
+
 {% block content %}
-Patient Dashboard
-{% endblock %}
-{% block body %}
-    <h1>Welcome {{patient.username}}</h1>
-    <h2>Your Appointments</h2>
-    <table border="2px" style="border:2px solid black; width:100%; margin-top:20px;">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Doctor Name</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for appointment in appointments %}
-            <tr>
-                <td>{{ appointment.id }}</td>
-                <td>{{appointment.date}}</td>
-                <td>{{appointment.time}}</td>
-                <td>{{appointment.docter_id}}</td>
-                <td>{{appointment.patient_id}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<h2>Patient Dashboard</h2>
+<p>Welcome, {{ patient.username }}!</p>
+
+<!-- Profile Information -->
+<div style="background-color: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #dee2e6;">
+    <h3>Profile Information</h3>
+    <p><strong>Username:</strong> {{ patient.username }}</p>
+    <p><strong>Email:</strong> {{ patient.email }}</p>
+    <p><strong>Contact:</strong> {{ patient.contact }}</p>
+    <p><strong>Address:</strong> NA </p>
+    <p><strong>Status:</strong> 
+        <span style="color: {% if patient.status == 'active' %}green{% else %}red{% endif %}; font-weight: bold;">
+            {{ patient.status|title }}
+        </span>
+    </p>
+</div>
+
+
+
 {% endblock %}

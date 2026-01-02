@@ -1,35 +1,77 @@
 {% extends 'base.html' %}
 {% block content %}
+
+<body>
 <h1>Admin Dashboard</h1>
 <p>Welcome to the Admin Dashboard!</p>
+<form action="/">
+    <input type="submit" class="btn btn-danger" value="logout">
+</form>
 
+<!-- Search Bar Section -->
+<div style="background-color: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #dee2e6;">
+    <h3>Search Users</h3>
+    <form method="POST" action="/admin_search" style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+        <input type="text" name="search_query" placeholder="Enter name to search..."
+            value="{{ search_query if search_query else '' }}"
+            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; min-width: 250px;">
 
+        <select name="search_type" style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px;">
+            <option value="all" {{ 'selected' if search_type=='all' else '' }}>All Users</option>
+            <option value="doctors" {{ 'selected' if search_type=='doctors' else '' }}>Doctors</option>
+            <option value="patient" {{ 'selected' if search_type=='patient' else '' }}>Patients</option>
+            <option value="department" {{ 'selected' if search_type=='department' else '' }}>Department</option>
+        </select>
+
+        <button type="submit"
+            style="padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Search
+        </button>
+
+        <a href="/admin_dashboard"
+            style="padding: 8px 16px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 4px;">
+            Clear Search
+        </a>
+    </form>
+    
+    {% if search_performed %}
+    <div
+        style="margin-top: 15px; padding: 10px; background-color: #d1ecf1; border: 1px solid #bee5eb; border-radius: 4px;">
+        <strong>Search Results for "{{ search_query }}" in {{ search_type.replace('_', ' ').title() }}:</strong>
+        <br>
+        <small>Found {{ (search_results.patients|length if search_results else patients|length) +
+            (search_results.doctors|length if search_results else doctors|length) }} total results</small>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Doctor section -->
 <div>
     <h2>Doctor List</h2>
-    <table style="border:2px solid black; width:100%; margin:20px; padding: auto;">
+    <table style="width:100%vw, #f8f9fa;padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #dee2e6;">
         <thead>
-            <tr><td><button onclick="location.href='/create_doctor'">Create New Doctor</button></td></tr>
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Contact</th>
-                <th>Department</th>
-                <th>Status</th>
-                <th>Actions</th>
+            <tr><td><button onclick="location.href='/create_doctor'" class="btn btn-success">Create New Doctor</button></td></tr>
+            <tr style="background-color: #f8f9fa;">
+                <th style="padding: 12px; border: 1px solid #dee2e6;">ID</th>
+                <th style="padding: 12px; border: 1px solid #dee2e6;">Username</th>
+                <th style="padding: 12px; border: 1px solid #dee2e6;">Email</th>
+                <th style="padding: 12px; border: 1px solid #dee2e6;">Contact</th>
+                <th style="padding: 12px; border: 1px solid #dee2e6;">Department</th>
+                <th style="padding: 12px; border: 1px solid #dee2e6;">Status</th>
+                <th style="padding: 12px; border: 1px solid #dee2e6;">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for doctor in doctors %}
             <tr>
-                <td>{{ doctor.id }}</td>
-                <td>{{ doctor.username }}</td>
-                <td>{{ doctor.email }}</td>
-                <td>{{ doctor.contact }}</td>
-                <td>{{ doctor.dept_id}}</td>
-                <td>{{ doctor.status }}</td>
-                <td>
-                    <a href="/edit_doctor/{{ doctor.id }}">Update</a> |
+                <td style="padding: 12px; border: 1px solid #dee2e6;">{{ doctor.id }}</td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;">{{ doctor.username }}</td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;">{{ doctor.email }}</td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;">{{ doctor.contact }}</td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;">{{ doctor.dept_id}}</td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;">{{ doctor.status }}</td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;">
+                    <a href="/edit_doctor/{{ doctor.id }} ">Update</a> |
                     <a href="/delete_doctor/{{ doctor.id }}">Delete</a>
                 </td>
             </tr>
@@ -39,32 +81,32 @@
 </div>
 
 
+<!-- Patient Section -->
 <div>
 <h2>Patient List</h2>
-<table style="border:2px solid black; width:100%; margin:20px; padding: auto;">
+<table style="background-color: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #dee2e6;">
     <thead>
         <tr>
-            <td><button onclick="location.href='/register'">Register New Patient</button></td>
+            <td><button onclick="location.href='/register'" class="btn btn-success">Register New Patient</button></td>
         </tr>
-        <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Contact</th>
-            <td>Status</td>
-            <th>Actions</th>
+        <tr style="background-color: #f8f9fa;">
+            <th style="padding: 12px; border: 1px solid #dee2e6;">ID</th>
+            <th style="padding: 12px; border: 1px solid #dee2e6;">Username</th>
+            <th style="padding: 12px; border: 1px solid #dee2e6;">Email</th>
+            <th style="padding: 12px; border: 1px solid #dee2e6;">Contact</th>
+            <td style="padding: 12px; border: 1px solid #dee2e6;">Status</td>
+            <th style="padding: 12px; border: 1px solid #dee2e6;">Actions</th>
         </tr>
     </thead>
     <tbody>
         {% for patient in patients %}
         <tr>
-            <td>{{ patient.id }}</td>
-            <td>{{ patient.username }}</td>
-            <td>{{ patient.email }}</td>
-            <td>{{ patient.contact }}</td>
-            <td>{{ patient.status }}</td>
-            <td>
-                <a href="/edit_patient/{{ patient.id }}">Update</a> |
+            <td style="padding: 12px; border: 1px solid #dee2e6;">{{ patient.id }}</td>
+            <td style="padding: 12px; border: 1px solid #dee2e6;">{{ patient.username }}</td>
+            <td style="padding: 12px; border: 1px solid #dee2e6;">{{ patient.email }}</td>
+            <td style="padding: 12px; border: 1px solid #dee2e6;">{{ patient.contact }}</td>
+            <td style="padding: 12px; border: 1px solid #dee2e6;" class=status>{{ patient.status }}</td>
+            <td style="padding: 12px; border: 1px solid #dee2e6;">
                 <a href="/delete_patient/{{ patient.id }}">Delete</a>
             </td>
         </tr>
@@ -74,30 +116,31 @@
 </div>
 
 
+<!-- Department section -->
 <div>
     <h2>Department list</h2>
     <br>
-    <table style="border:2px solid black; width:100%; margin:20px; padding: auto;">
+    <table style="background-color: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #dee2e6;">
         <thead>
-            <tr><td><button onclick="location.href='/create_department'">Create New Department</button></td></tr>
-            <tr>
-                <th>ID</th>
-                <th>Department Name</th>
-                <th>Description</th>
-                <th>Location</th>
-                <th>Status</th>
-                <th>Actions</th>
+            <tr><td><button onclick="location.href='/create_department'" class="btn btn-success">Create New Department</button></td></tr>
+            <tr style="background-color: #f8f9fa;">
+                <th style="padding: 12px; border: 1px solid #dee2e6;">ID</th>
+                <th style="padding: 12px; border: 1px solid #dee2e6;">Department Name</th>
+                <th style="padding: 12px; border: 1px solid #dee2e6;">Description</th>
+                <th style="padding: 12px; border: 1px solid #dee2e6;">Location</th>
+                <th style="padding: 12px; border: 1px solid #dee2e6;">Status</th>
+                <th style="padding: 12px; border: 1px solid #dee2e6;">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for department in departments %}
             <tr>
-                <td>{{ department.id }}</td>
-                <td>{{department.name}}</td>
-                <td>{{department.description}}</td>
-                <td>{{department.building}}</td>
-                <td>{{department.status}}</td>
-                <td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;">{{ department.id }}</td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;">{{department.name}}</td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;">{{department.description}}</td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;">{{department.building}}</td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;" class="status">{{department.status}}</td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;">
                     <a href="/edit_department/{{department.id}}">Update</a> |
                     <a href="/delete_department/{{ department.id }}">Delete</a>
                 </td>
@@ -106,4 +149,42 @@
         </tbody>
     </table>
 </div>
+
+
+<!-- Appointment section -->
+<div id="appointment-table">
+    <h2>Appointment list</h2>
+    <table style="background-color: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #dee2e6;">
+        <thead>
+            <tr><td><button onclick="location.href='/create_appointment'" class="btn btn-success">Book a appointment</button></td></tr>
+            <tr style="background-color: #f8f9fa;">
+                <th style="padding: 12px; border: 1px solid #dee2e6;">ID</th>
+                <th style="padding: 12px; border: 1px solid #dee2e6;">Doctor Id</th>
+                <th style="padding: 12px; border: 1px solid #dee2e6;">Patient Id</th>
+                <th style="padding: 12px; border: 1px solid #dee2e6;">Time</th>
+                <th style="padding: 12px; border: 1px solid #dee2e6;">Status</th>
+                <th style="padding: 12px; border: 1px solid #dee2e6;">Prescription</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in appointments %}
+            <tr>
+                <td style="padding: 12px; border: 1px solid #dee2e6;">{{ appointment.id }}</td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;">{{appointment.name}}</td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;">{{appointment.description}}</td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;">{{appointment.building}}</td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;" class="status">{{appointment.status}}</td>
+                <td style="padding: 12px; border: 1px solid #dee2e6;">
+                    <a href="/edit_department/{{depa.id}}">Update</a> |
+                    <a href="/cancel_appointment/{{ appointment.id }}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+
+</body>
 {% endblock %}
