@@ -1,73 +1,68 @@
 {% extends 'base.html' %}
 {% block content %}
-<center>
-    <h1 id="heading"><u>Doctor creation page</u></h1>
-</center>
-<hr>
-<form action="/create_doctor" method="POST">
-    <fieldset>
-        <legend>Username details</legend>
-        <table>
-            <tr>
-                <td><label for="username" class="form">Username</label></td>
-                <td><input type="text" id="username" name="username" class="=form"></td>
-            </tr>
-            <tr>
-                <td> <label for="password" class="form">Password</label></td>
-                <td><input type="password" id="password" name="password" class="form"></td>
-            </tr>
-        </table>
-    </fieldset>
-    <fieldset>
-        <legend>
-            Personal details
-        </legend>
-        <table width="100%">
-            <tr>
-                <td><label for="email">Email</label></td>
-                <td><input type="text" id="email" name="email"></td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="contact">Contact</label>
-                </td>
-                <td>
-                    <input type="text" id="contact" name="contact">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="dept_id">Department</label>
-                </td>
-                <td>
-                    <input type="text" id="dept_id" name="dept_id">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="name">Full name</label>
-                </td>
-                <td>
-                    <input type="text" id="name" name="name">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="address1">Address Line1</label>
-                </td>
-                <td>
-                    <input type="text" id="address1" name="address1">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button onclick="location.href='/admin_dashboard'" style=" padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">Create New Docter</button>
-                </td>
-                <td>
-                    <a href="/admin_dashboard" style=" padding: 10px 20px; background-color: #fa6509; color: white; border: none; border-radius: 5px; cursor: pointer;">Cancel</a>
-                </td>
-            </tr>
-        </table>
-    </fieldset>
-    </form>
-    {% endblock %}
+<div class="form-shell">
+    <div class="form-panel">
+        <p class="eyebrow">Clinical Staff</p>
+        <h1>Create New Doctor</h1>
+                    <form action="{{ url_for('create_doctor') }}" method="POST">
+                        <fieldset class="mb-4">
+                            <legend class="fs-6 mb-3">Account Details</legend>
+                            
+                            <div class="form-group">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" id="username" name="username" class="form-control" placeholder="Enter doctor's username" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" id="password" name="password" class="form-control" placeholder="Enter secure password" required>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="mb-4">
+                            <legend class="fs-6 mb-3">Personal Details</legend>
+                            
+                            <div class="form-group">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" id="name" name="name" class="form-control" placeholder="Enter doctor's full name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter doctor's email" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="contact" class="form-label">Contact Number</label>
+                                <input type="tel" id="contact" name="contact" class="form-control" placeholder="Enter phone number" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="specialization" class="form-label">Specialization</label>
+                                <input type="text" id="specialization" name="specialization" class="form-control" placeholder="e.g., Cardiology, Orthopedics">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dept_id" class="form-label">Department</label>
+                                <select id="dept_id" name="dept_id" class="form-select" required>
+                                    <option value="">Choose department</option>
+                                    {% for department in departments %}
+                                    <option value="{{ department.id }}">{{ department.name }} · {{ department.building }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="availability" class="form-label">General Availability</label>
+                                <input type="text" id="availability" name="availability" class="form-control" value="Mon-Fri, 10:00-16:00" placeholder="e.g., Mon-Fri, 10:00-16:00">
+                            </div>
+                        </fieldset>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success flex-grow-1">Create Doctor</button>
+                            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary flex-grow-1">Cancel</a>
+                        </div>
+                    </form>
+    </div>
+</div>
+{% endblock %}

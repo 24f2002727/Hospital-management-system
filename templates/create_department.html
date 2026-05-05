@@ -1,31 +1,37 @@
 {% extends "base.html" %}
-{%block content%}
-<h1>Create New Department</h1>
-<div>
-    <form action="/create_department" method="POST">
-        <table>
-            <tr>
-                <td><label for="name">Department Name</label></td>
-                <td><input type="text" id="name" name="name" required></td>
-            </tr>
-            <tr>
-                <td><label for="description" >Description</label></td>
-                <td><input type="text" id="description" name="description"></td>
-            </tr>
-            <tr>
-                <td><label for="building">Building</label></td>
-                <td><input type="text" id="building" name="building"></td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="submit" value="Create Department" style="margin-bottom: 20px; padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                </td>
-                <td>
-                    <a href="/admin_dashboard">Cancel</a>
-                </td>
-            </tr>
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">🏥 Create New Department</h2>
+                </div>
+                <div class="card-body">
+                    <form action="/create_department" method="POST">
+                        <div class="form-group">
+                            <label for="name" class="form-label">Department Name</label>
+                            <input type="text" id="name" name="name" class="form-control" placeholder="Enter department name" required>
+                        </div>
 
+                        <div class="form-group">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter department description"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="building" class="form-label">Building/Location</label>
+                            <input type="text" id="building" name="building" class="form-control" placeholder="Enter building or location" required>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success flex-grow-1">Create Department</button>
+                            <a href="/admin_dashboard" class="btn btn-secondary flex-grow-1">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-        </table>
-    </form>
-{%endblock%}
+{% endblock %}

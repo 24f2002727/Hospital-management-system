@@ -1,61 +1,72 @@
 {% extends 'base.html' %}
 {% block content %}
-<div style="background-color: #d0cdcc; padding: 20px; border-radius: 5px; width: 70%; margin: auto; box-shadow: 10px 8px 10px rgba(0, 0, 0, 0.196);>
-<h2>Edit Patient's details</h2>
-<h4>Patient ID: {{ patient.id }}</h4>
-<form action="/edit_patient/{{ patient.id }}" method="post">
-    <table style="border:2px solid black; width:70%; margin:20px; padding: auto; ">
-        <thead>
-            <tr>
-                <td>
-                    <label for="username">Username:</label>
-                </td>
-                <td>
-                    <input type="text" id="username" name="username" value="{{ patient.username }}" required>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="password">Password:</label>
-                </td>
-                <td>
-                    <input type="password" id="password" name="password" required>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="email">Email</label>
-                </td>
-                <td>
-                    <input type="text" id="email" value="{{ patient.email }}" name="email" required>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="contact">Contact:</label>
-                </td>
-                <td>
-                    <input type="text" id="contact" name="contact" value="{{ patient.contact }}" required>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <select name="status" id="status">
-                        <option value="active" {% if patient.status=='active' %}selected{% endif %}>Active</option>
-                        <option value="blacklist" {% if patient.status=='blacklist' %}selected{% endif %}>Blacklist</option>
-                        <option value="removed">Removed</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="submit" value="Update Patient" style=" padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                </td>
-                <td>
-                    <a href="/admin_dashboard">Cancel</a>
-                </td>
-            </tr>
-    </table>
-</form>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">👥 Edit Patient Details</h2>
+                    <small class="text-muted">Patient ID: #{{ patient.id }}</small>
+                </div>
+                <div class="card-body">
+                    <form action="/edit_patient/{{ patient.id }}" method="post">
+                        <fieldset class="mb-4">
+                            <legend class="fs-6 mb-3">Personal Information</legend>
+                            
+                            <div class="form-group">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" id="name" name="name" class="form-control" value="{{ patient.name }}" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" id="email" name="email" class="form-control" value="{{ patient.email }}" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="contact" class="form-label">Contact</label>
+                                <input type="tel" id="contact" name="contact" class="form-control" value="{{ patient.contact }}" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="date_of_birth" class="form-label">Date of Birth</label>
+                                <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" value="{{ patient.date_of_birth or '' }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address" class="form-label">Address</label>
+                                <textarea id="address" name="address" class="form-control" rows="3" placeholder="Enter your address">{{ patient.address or '' }}</textarea>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="mb-4">
+                            <legend class="fs-6 mb-3">Account Details</legend>
+                            
+                            <div class="form-group">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" id="username" name="username" class="form-control" value="{{ patient.username }}" required>
+                            </div>
+
+                            {% if session.get('role') == 'admin' %}
+                            <div class="form-group">
+                                <label for="status" class="form-label">Account Status</label>
+                                <select name="status" id="status" class="form-select" required>
+                                    <option value="active" {% if patient.status == 'active' %}selected{% endif %}>Active</option>
+                                    <option value="blocked" {% if patient.status == 'blocked' %}selected{% endif %}>Blocked</option>
+                                    <option value="removed" {% if patient.status == 'removed' %}selected{% endif %}>Removed</option>
+                                </select>
+                            </div>
+                            {% endif %}
+                        </fieldset>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success flex-grow-1">Update Patient</button>
+                            <a href="{% if session.get('role') == 'admin' %}/admin_dashboard{% else %}/patient_dashboard{% endif %}" class="btn btn-secondary flex-grow-1">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

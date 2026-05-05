@@ -1,24 +1,210 @@
 {% extends 'base.html' %}
-{% block title %}Doctor Dashboard{% endblock %}
-
+{% block title %}Patient Dashboard{% endblock %}
 {% block content %}
-<h2>Patient Dashboard</h2>
-<p>Welcome, {{ patient.username }}!</p>
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <p class="eyebrow">Patient Portal</p>
+            <h1>Hello, {{ patient.name or patient.username }}</h1>
+            <p>Book care, follow appointment status, and review your medical records.</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <a href="{{ url_for('create_appointment') }}" class="btn btn-success">📅 Book Appointment</a>
+            <a href="{{ url_for('search_doctors') }}" class="btn btn-info">🔍 Find a Doctor</a>
+        </div>
+    </div>
 
-<!-- Profile Information -->
-<div style="background-color: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #dee2e6;">
-    <h3>Profile Information</h3>
-    <p><strong>Username:</strong> {{ patient.username }}</p>
-    <p><strong>Email:</strong> {{ patient.email }}</p>
-    <p><strong>Contact:</strong> {{ patient.contact }}</p>
-    <p><strong>Address:</strong> NA </p>
-    <p><strong>Status:</strong> 
-        <span style="color: {% if patient.status == 'active' %}green{% else %}red{% endif %}; font-weight: bold;">
-            {{ patient.status|title }}
-        </span>
-    </p>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.upcoming }}</div>
+            <div class="stat-label">Upcoming Appointments</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.past }}</div>
+            <div class="stat-label">Past Appointments</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.completed }}</div>
+            <div class="stat-label">Completed Visits</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ doctors|length }}</div>
+            <div class="stat-label">Available Doctors</div>
+        </div>
+    </div>
+
+    <!-- Upcoming Appointments -->
+    <div class="section-heading">
+        <h2>📅 Upcoming Appointments</h2>
+        <a href="{{ url_for('create_appointment') }}" class="btn btn-success btn-sm">+ New Appointment</a>
+    </div>
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Doctor</th>
+                        <th>Department</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in upcoming_appointments %}
+                    <tr>
+                        <td>
+                            <strong>{{ appointment.date }}</strong><br>
+                            <small>{{ appointment.time }}</small>
+                        </td>
+                        <td>
+                            <strong>{{ appointment.doctor.name or appointment.doctor.username }}</strong>
+                            {% if appointment.doctor.specialization %}
+                            <br><small class="text-muted">{{ appointment.doctor.specialization }}</small>
+                            {% endif %}
+                        </td>
+                        <td>{{ appointment.doctor.department.name if appointment.doctor.department else 'General' }}</td>
+                        <td>{{ appointment.reason or '-' }}</td>
+                        <td>
+                            <span class="badge badge-{{ appointment.status|status_badge }}">{{ appointment.status|upper }}</span>
+                        </td>
+                        <td>
+                            {% if appointment.status in ['pending', 'booked'] %}
+                            <a href="{{ url_for('update_appointment', appointment_id=appointment.id, action='cancelled') }}" class="btn btn-sm btn-danger">Cancel</a>
+                            {% else %}
+                            <small class="text-muted">-</small>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            No upcoming appointments.<br>
+                            <a href="{{ url_for('create_appointment') }}">Book your first appointment →</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Past Appointments -->
+    <div class="section-heading mt-4">
+        <h2>📋 Past Appointments</h2>
+        <a href="{{ url_for('patient_treatment_history') }}" class="btn btn-outline-primary btn-sm">View All Medical Records</a>
+    </div>
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Doctor</th>
+                        <th>Status</th>
+                        <th>Diagnosis</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in past_appointments[:5] %}
+                    <tr>
+                        <td><small>{{ appointment.date }}</small></td>
+                        <td><small>{{ appointment.doctor.name or appointment.doctor.username }}</small></td>
+                        <td><span class="badge badge-{{ appointment.status|status_badge }} badge-sm">{{ appointment.status|upper }}</span></td>
+                        <td>
+                            <small>
+                                {% set treatment = appointment.treatment[0] if appointment.treatment else None %}
+                                {% if treatment %}
+                                    {{ treatment.diagnosis[:50] }}{% if treatment.diagnosis|length > 50 %}...{% endif %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </small>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="empty-state">No past appointments.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if past_appointments|length > 5 %}
+        <p class="text-muted mt-2"><small><a href="{{ url_for('patient_treatment_history') }}">View all {{ past_appointments|length }} past appointments →</a></small></p>
+        {% endif %}
+    </div>
+
+    <!-- Available Doctors -->
+    <div class="section-heading mt-4">
+        <h2>👨‍⚕️ Browse Available Doctors</h2>
+        <a href="{{ url_for('search_doctors') }}" class="btn btn-outline-primary btn-sm">Search More Doctors</a>
+    </div>
+    <div class="doctor-grid">
+        {% for doctor in doctors[:6] %}
+        <div class="card h-100">
+            <div class="card-body">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">👨‍⚕️</div>
+                <h5 class="card-title">{{ doctor.name or doctor.username }}</h5>
+                {% if doctor.specialization %}
+                <p class="card-text text-muted"><small>{{ doctor.specialization }}</small></p>
+                {% endif %}
+                {% if doctor.department %}
+                <p class="card-text">
+                    <small><span class="badge bg-info">{{ doctor.department.name }}</span></small>
+                </p>
+                {% endif %}
+                <p class="card-text"><small>{{ doctor.contact }}</small></p>
+            </div>
+            <div class="card-footer bg-light">
+                <a href="{{ url_for('doctor_profile', doctor_id=doctor.id) }}" class="btn btn-sm btn-primary w-100">
+                    View Profile & Book
+                </a>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info w-100">No active doctors available.</div>
+        {% endfor %}
+    </div>
+
+    <!-- Departments -->
+    <div class="section-heading mt-4">
+        <h2>🏥 Available Departments</h2>
+    </div>
+    <div class="profile-grid">
+        {% for department in departments %}
+        <div class="info-panel">
+            <h5>{{ department.name }}</h5>
+            <p><strong>Location:</strong> {{ department.building }}</p>
+            <p>{{ department.description }}</p>
+            <a href="{{ url_for('search_doctors') }}" class="btn btn-sm btn-primary mt-2">View Doctors</a>
+        </div>
+        {% else %}
+        <div class="alert alert-info w-100">No departments configured.</div>
+        {% endfor %}
+    </div>
+
+    <!-- Patient Profile -->
+    <div class="profile-grid mt-4">
+        <div class="info-panel">
+            <h2>👤 Your Profile</h2>
+            <p><strong>Name:</strong> {{ patient.name }}</p>
+            <p><strong>Email:</strong> {{ patient.email }}</p>
+            <p><strong>Contact:</strong> {{ patient.contact }}</p>
+            {% if patient.date_of_birth %}
+            <p><strong>DOB:</strong> {{ patient.date_of_birth }}</p>
+            {% endif %}
+            <p><strong>Status:</strong> <span class="badge badge-{{ patient.status|status_badge }}">{{ patient.status|upper }}</span></p>
+            <a href="{{ url_for('edit_patient', patient_id=patient.id) }}" class="btn btn-primary btn-sm mt-2 w-100">Edit Profile</a>
+        </div>
+        <div class="info-panel">
+            <h2>📚 Medical Records</h2>
+            <p>You have <strong>{{ treatments|length }}</strong> treatment records.</p>
+            <a href="{{ url_for('patient_treatment_history') }}" class="btn btn-outline-primary btn-sm mt-2 w-100">
+                View All Medical Records
+            </a>
+        </div>
+    </div>
 </div>
-
-
-
 {% endblock %}

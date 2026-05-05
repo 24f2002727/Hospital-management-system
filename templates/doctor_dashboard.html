@@ -1,83 +1,164 @@
 {% extends 'base.html' %}
 {% block title %}Doctor Dashboard{% endblock %}
-
 {% block content %}
-<h2>Doctor Dashboard</h2>
-<p>Welcome, {{ doctor.username }}!</p>
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <p class="eyebrow">Doctor Workspace</p>
+            <h1>Welcome, Dr. {{ doctor.name or doctor.username }}</h1>
+            <p>{{ doctor.department.name if doctor.department else 'Department not assigned' }}
+            {% if doctor.specialization %} · {{ doctor.specialization }}{% endif %}</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <a href="{{ url_for('update_availability') }}" class="btn btn-info">⏰ Manage Schedule</a>
+            <a href="{{ url_for('edit_patient', patient_id=doctor.id) }}" class="btn btn-light">👤 Profile</a>
+        </div>
+    </div>
 
-<!-- Profile Information -->
-<div style="background-color: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #dee2e6;">
-    <h3>Profile Information</h3>
-    <p><strong>Username:</strong> {{ doctor.username }}</p>
-    <p><strong>Email:</strong> {{ doctor.email }}</p>
-    <p><strong>Contact:</strong> {{ doctor.contact }}</p>
-    <p><strong>Storage Capacity:</strong> {{ doctor.storage_capacity }}</p>
-    <p><strong>Status:</strong> 
-        <span style="color: {% if doctor.status == 'active' %}green{% else %}red{% endif %}; font-weight: bold;">
-            {{ doctor.status|title }}
-        </span>
-    </p>
-</div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.upcoming }}</div>
+            <div class="stat-label">Upcoming This Week</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.patients }}</div>
+            <div class="stat-label">Assigned Patients</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.completed }}</div>
+            <div class="stat-label">Completed Appointments</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ all_appointments|length }}</div>
+            <div class="stat-label">Total Appointments</div>
+        </div>
+    </div>
 
-<!-- Availability Management -->
-<div style="background-color: #e8f4fd; padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #bee5eb;">
-    <h3>Manage Your Availability</h3>
-    {% set current_dates = doctor.open_dates %}
-    {% if current_dates %}
-        {% set dates_list = current_dates|from_json %}
-        <p><strong>Current Availability:</strong></p>
-        <ul style="margin: 10px 0;" id="availability-list">
-            {% for date in dates_list %}
-            <li style="margin: 5px 0;" id="avail-date-{{ loop.index0 }}">{{ date }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p style="color: #856404; background-color: #fff3cd; padding: 10px; border: 1px solid #ffeaa7; border-radius: 4px;">
-            <strong>No availability set.</strong> Please update your availability to let customers know when you're available.
-        </p>
+    <!-- Upcoming This Week -->
+    <div class="section-heading">
+        <h2>📅 Upcoming Appointments - This Week</h2>
+    </div>
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Patient</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in upcoming_appointments %}
+                    <tr>
+                        <td>
+                            <strong>{{ appointment.date }}</strong><br>
+                            <small>{{ appointment.time }}</small>
+                        </td>
+                        <td>
+                            <strong>{{ appointment.patient.name or appointment.patient.username }}</strong><br>
+                            <small class="text-muted">#{{ appointment.patient.id }}</small>
+                        </td>
+                        <td>{{ appointment.reason or '-' }}</td>
+                        <td>
+                            <span class="badge badge-{{ appointment.status|status_badge }}">{{ appointment.status|upper }}</span>
+                        </td>
+                        <td class="action-dropdown">
+                            <a href="{{ url_for('doctor_patient_history', patient_id=appointment.patient_id) }}" class="btn btn-sm btn-outline-info" title="View patient history">📋</a>
+                            <a href="{{ url_for('create_treatment', appointment_id=appointment.id) }}" class="btn btn-sm btn-info">Notes</a>
+                            <a href="{{ url_for('update_appointment', appointment_id=appointment.id, action='completed') }}" class="btn btn-sm btn-success">Complete</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="empty-state">No appointments scheduled for this week.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- All Appointments -->
+    <div class="section-heading mt-4">
+        <h2>📊 All Appointments History</h2>
+    </div>
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Patient</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in all_appointments[:10] %}
+                    <tr>
+                        <td>
+                            <small>{{ appointment.date }} {{ appointment.time }}</small>
+                        </td>
+                        <td>
+                            <small>{{ appointment.patient.name or appointment.patient.username }}</small>
+                        </td>
+                        <td><small>{{ appointment.reason or '-' }}</small></td>
+                        <td>
+                            <span class="badge badge-{{ appointment.status|status_badge }} badge-sm">{{ appointment.status|upper }}</span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('doctor_patient_history', patient_id=appointment.patient_id) }}" class="btn btn-sm btn-outline-info" title="View full history">👁</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="empty-state">No appointments yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if all_appointments|length > 10 %}
+        <p class="text-muted mt-2"><small>Showing 10 of {{ all_appointments|length }} total appointments</small></p>
+        {% endif %}
+    </div>
+
+    <!-- Patients List -->
+    {% if patients %}
+    <div class="section-heading mt-4">
+        <h2>👥 Your Patients ({{ patients|length }})</h2>
+    </div>
+    <div class="profile-grid">
+        {% for patient in patients %}
+        <div class="info-panel">
+            <h5>{{ patient.name or patient.username }}</h5>
+            <p><strong>ID:</strong> #{{ patient.id }}</p>
+            <p><strong>Contact:</strong> {{ patient.contact }}</p>
+            <p><strong>Email:</strong> {{ patient.email }}</p>
+            <a href="{{ url_for('doctor_patient_history', patient_id=patient.id) }}" class="btn btn-sm btn-primary mt-2 w-100">View History</a>
+        </div>
+        {% endfor %}
+    </div>
     {% endif %}
-    
-    <button onclick="location.href='/update_availability'" 
-            style="margin-top: 15px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-        Update Availability
-    </button>
-</div>
 
-<!-- Quick Actions -->
-<div style="margin: 30px 0;">
-    <h3>Quick Actions</h3>
-    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-        <button onclick="location.href='/update_availability'" 
-                style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
-            Set Availability
-        </button>
-        <button onclick="location.href='/logout'" 
-                style="padding: 10px 20px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
-            Logout
-        </button>
+    <!-- Profile Card -->
+    <div class="profile-grid mt-4">
+        <div class="info-panel">
+            <h2>👤 Doctor Profile</h2>
+            <p><strong>Name:</strong> {{ doctor.name }}</p>
+            <p><strong>Email:</strong> {{ doctor.email }}</p>
+            <p><strong>Contact:</strong> {{ doctor.contact }}</p>
+            <p><strong>Status:</strong> <span class="badge badge-{{ doctor.status|status_badge }}">{{ doctor.status|upper }}</span></p>
+        </div>
+        <div class="info-panel">
+            <h2>⏰ Availability</h2>
+            <p>{{ doctor.availability }}</p>
+            <a href="{{ url_for('update_availability') }}" class="btn btn-primary btn-sm mt-2 w-100">Edit Schedule</a>
+        </div>
     </div>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Format availability dates
-    {% if current_dates %}
-        {% set dates_list = current_dates|from_json %}
-        {% for date in dates_list %}
-        const dateElement = document.getElementById('avail-date-{{ loop.index0 }}');
-        if (dateElement) {
-            const dateObj = new Date('{{ date }}');
-            const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
-            const formattedDate = dateObj.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            dateElement.textContent = `{{ date }} - ${dayName}, ${formattedDate}`;
-        }
-        {% endfor %}
-    {% endif %}
-});
-</script>
-
 {% endblock %}

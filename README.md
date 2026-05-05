@@ -1,53 +1,281 @@
-# Hospital-management-system
-It is the dummy hospital mangement repository for the bootcamp
+# Hospital Management System (HMS)
 
-Day-1
+A comprehensive Flask-based Hospital Management System with role-based access control for Admins, Doctors, and Patients.
 
-Create a "templates folder" --> inside this only all the HTML pages will be made and saved.
-Home page of your application --> home.html --> will be your landing page of the application.
-Patient Registration HTML page is made with the help of HTML forms tag.
-User (Admin, Doctor and Patient) Login HTML page is made with the help of HTML forms tag.
-Flask app initialization is done in the file --> app.py.
-1st route --> initial route --> for rendering your home page is done.
-Models for 5 tables especially - Doctor, Patient, Appointment, Treatment, Department --> is completed --> models.py file.
-Database Initialization is done in the file --> app.py
-When you run the python file (app.py), your database is getting created with name "your_db_name.db" --> with all the tables created in models.py.
-Please install SQLite Viewer in your VSCode extensions to see your database clearly.
+## Features
 
-Day-2
+### 🔐 User Management & Authentication
+- Role-based login (Admin, Doctor, Patient)
+- Patient self-registration
+- Admin pre-created (no registration allowed)
+- Doctor account creation only by admin
+- Account blocking and removal capabilities
 
-Establishing the relationship between the tables created inside models.py file.
-Once done, and database is getting created, commit your changes.
-Setting up or predefining the code for admin credentials in app.py file.
-Once done commit this change as well.
-Create a base.html page --> containing the rules of flashing the message for success and danger.
-Template inheritance is done in registration.html and login.html file from base.html file, using jinja2.
-Create a route for Patient Registration HTML page --> to render the HTML page.
-Create a route for Login of 3 users --> Admin, Doctor and Patient --> to render the HTML page.
-Create a basic HTML page for --> Admin Dashboard.
-Create a basic HTML page for --> Doctor Dashboard.
-Create a basic HTML page for --> Patient Dashboard.
-Create a route for Admin Dashboard HTML page --> to render the HTML page.
-Create a route for Doctor Dashboard HTML page --> to render the HTML page.
-Create a route for Patient Dashboard HTML page --> to render the HTML page.
-Once done, commit the changes of registration and login, with dashboard routes and HTML pages.
-After cross reviewing your task with me, then only you will push your codes on github repository.
+### 👨‍💼 Admin Functionalities
+- **Dashboard**: View statistics (total doctors, patients, departments, appointments)
+- **Doctor Management**:
+  - Create new doctor profiles with name, specialization, email, contact
+  - Edit doctor details (name, specialization, department, availability status)
+  - Remove/Block doctors from the system
+  - Search doctors by name or specialization
+  
+- **Patient Management**:
+  - View all patient profiles
+  - Edit patient information
+  - Search patients by name, email, or contact information
+  - Remove/Block patients from the system
+  
+- **Department Management**:
+  - Create new departments
+  - Edit department details (name, description, location)
+  - Delete departments
+  
+- **Appointment Management**:
+  - View all upcoming and past appointments
+  - Track appointment status (pending, completed, cancelled)
+  - Advanced search functionality
 
-Day-3
+### 👨‍⚕️ Doctor Functionalities
+- **Dashboard**: 
+  - View upcoming appointments for the week
+  - See all assigned patients
+  - Track completed appointments statistics
+  
+- **Appointment Management**:
+  - View upcoming appointments with patient details
+  - Mark appointments as completed or cancelled
+  - View full appointment history
+  
+- **Availability Management**:
+  - Set general availability message
+  - Create 7-day availability schedule with specific time slots
+  - Enable/disable availability for each day
+  - Manage time slots for each available day
+  
+- **Patient Management**:
+  - View list of assigned patients
+  - View complete patient history and previous treatments
+  - Access patient medical records
+  
+- **Treatment Records**:
+  - Add diagnosis, prescription, and notes for completed appointments
+  - View patient treatment history for informed consultation
 
-Create a HTML Page for --> creating department --> done by admin.
-Create a route for creating department HTML page --> to render the HTML page.
-Create a button on admin dashboard --> to redirect to create department page.
-Table creation showing the list of all the present departments --> with edit and delete button --> on admin dashboard.
-Using jinja2, all the details of departments are shown on admin dashboard inside the table.
-Create a HTML page --> for editing the department --> done by admin.
-Create a route for editing the department HTML page --> to render the HTML page.
-Create a route for deleting the department --> done by admin.
-Once done, commit all the changes done till now.
-After cross reviewing your task with me, then only you will push your codes on github repository.
-Create a HTML page --> for creating doctors profile --> done by admin.
-Create a route for creating doctors profile HTML page --> to render the HTML page.
-Create a button on admin dashboard --> to redirect to create doctor profile page.
+### 👥 Patient Functionalities
+- **Dashboard**:
+  - View available doctors and specializations
+  - See upcoming and past appointments
+  - Access medical records and treatment history
+  - Statistics on appointments and medical records
+  
+- **Doctor Discovery**:
+  - Search doctors by name, specialization, or department
+  - View doctor profiles with qualifications
+  - See doctor's 7-day availability schedule
+  - Browse by specialization categories
+  
+- **Appointment Management**:
+  - Book appointments with available doctors
+  - Select from available time slots based on doctor's schedule
+  - Specify reason for visit
+  - Cancel upcoming appointments
+  - View appointment status (pending, completed, cancelled)
+  
+- **Medical Records**:
+  - View complete treatment history with diagnosis and prescriptions
+  - Access doctor's notes for each appointment
+  - Track health records over time
+  
+- **Profile Management**:
+  - Edit personal information (name, email, contact, DOB, address)
+  - Manage account details
+
+### 🔧 Core System Features
+- **Double-Booking Prevention**: Prevents multiple appointments at the same date and time for the same doctor
+- **Dynamic Appointment Status**: Track appointments through status flow (Pending → Completed/Cancelled)
+- **7-Day Doctor Availability**: Doctors set availability for the next 7 days with specific time slots
+- **Treatment Records**: Store diagnosis, prescriptions, and doctor notes for each appointment
+- **Search & Filter**: Advanced search for doctors, patients, departments, and specializations
+- **Role-Based Access Control**: Secure role-based routes and operations
+
+## Installation & Setup
+
+### Prerequisites
+- Python 3.8+
+- Flask
+- SQLAlchemy
+- SQLite (included with Python)
+
+### Installation Steps
+
+1. **Clone the repository**:
+```bash
+git clone <repository-url>
+cd Hospital-management-system
+```
+
+2. **Create a virtual environment** (optional but recommended):
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. **Install dependencies**:
+```bash
+pip install flask flask-sqlalchemy
+```
+
+4. **Initialize the database**:
+```bash
+python app.py
+```
+
+The database will be created automatically, and a default admin account will be created with:
+- **Username**: admin
+- **Password**: 123456
+- **Email**: shivam@gmail.com
+
+## Running the Application
+
+```bash
+python app.py
+```
+
+The application will run on `http://localhost:5000`
+
+## User Access
+
+### Admin Account (Pre-created)
+- **Username**: admin
+- **Password**: 123456
+- **Access**: Full system access, create/edit doctors, manage departments and patients
+
+### Creating Doctors
+1. Login as Admin
+2. Navigate to Admin Dashboard
+3. Click "Create Doctor"
+4. Fill in all details (name, username, password, email, contact, specialization, department)
+5. Doctor can now login with created credentials
+
+### Patient Registration
+1. Click "Register" on home page
+2. Fill in registration form (name, email, contact, username, password)
+3. Login with credentials
+4. Access patient dashboard
+
+## Database Schema
+
+### Tables
+
+**Admin**
+- id, username, password, email, contact, name, role
+
+**Doctor**
+- id, name, username, password, email, contact, specialization, dept_id, availability, status, role, admin_id
+
+**Patient**
+- id, name, username, password, email, contact, date_of_birth, address, status, role
+
+**Department**
+- id, name, description, building, status, admin_id
+
+**Appointment**
+- id, date, time, reason, patient_id, doctor_id, status, schedule
+
+**Treatment**
+- id, diagnosis, prescription, notes, created_at, appt_id
+
+**DoctorAvailability**
+- id, doctor_id, date, time_slots, is_available, created_at, updated_at
+
+**Schedule_doctors**
+- id, doctor_name, doctor_availability, doct_id
+
+## Key Routes
+
+### Authentication
+- `/` - Home page
+- `/register` - Patient registration
+- `/login` - User login
+- `/logout` - User logout
+
+### Admin Routes
+- `/admin_dashboard` - Admin dashboard
+- `/admin_search` - Search patients/doctors
+- `/create_doctor` - Create doctor
+- `/edit_doctor/<id>` - Edit doctor
+- `/delete_doctor/<id>` - Remove doctor
+- `/create_department` - Create department
+- `/edit_department/<id>` - Edit department
+
+### Doctor Routes
+- `/doctor_dashboard` - Doctor dashboard
+- `/update_availability` - Set availability schedule
+- `/doctor_patient_history/<id>` - View patient history
+- `/create_treatment/<id>` - Add treatment notes
+
+### Patient Routes
+- `/patient_dashboard` - Patient dashboard
+- `/search_doctors` - Find doctors
+- `/doctor_profile/<id>` - View doctor profile
+- `/create_appointment` - Book appointment
+- `/patient_treatment_history` - View medical records
+- `/edit_patient/<id>` - Edit profile
+
+## Security Features
+- Password hashing with werkzeug
+- Role-based access control
+- Login required decorators on protected routes
+- Session management
+- Account status tracking (active/blocked/removed)
+
+## Customization
+
+### Modify Admin Credentials
+Edit `create_admin()` function in `app.py`:
+```python
+admin = Admin(
+    username="your_username",
+    email="your_email@gmail.com",
+    contact="your_contact",
+    password=generate_password_hash("your_password", method="pbkdf2:sha256"),
+)
+```
+
+### Styling
+CSS files are located in `/static/` directory:
+- `style.css` - Main stylesheet
+- `register_button.css` - Registration page styling
+
+## Troubleshooting
+
+### Database Issues
+If you encounter database errors, delete `hms.db` and run `python app.py` again.
+
+### Import Errors
+Ensure all dependencies are installed: `pip install -r requirements.txt`
+
+### Port Already in Use
+Change the port in `app.py`: `app.run(debug=True, port=5001)`
+
+## Future Enhancements
+- Email notifications for appointments
+- SMS alerts
+- Online payment integration
+- Prescription management system
+- Analytics and reporting dashboard
+- Multi-location support
+- Video consultation feature
+
+## Technologies Used
+- **Framework**: Flask
+- **Database**: SQLite with SQLAlchemy ORM
+- **Frontend**: HTML5, CSS3, Bootstrap 5, Jinja2
+- **Authentication**: werkzeug for password hashing
+- **Backend**: Python 3
+
+## License
+This project is for educational purposes.
 Table creation showing the list of all the present doctors --> with edit, blacklist and delete button --> on admin dashboard.
 Using jinja2, all the details of doctors are shown on admin dashboard inside the table.
 Table creation showing the list of all the present patients --> with edit, blacklist and delete button --> on admin dashboard.

@@ -1,190 +1,163 @@
 {% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
 {% block content %}
-
-<body>
-<h1>Admin Dashboard</h1>
-<p>Welcome to the Admin Dashboard!</p>
-<form action="/">
-    <input type="submit" class="btn btn-danger" value="logout">
-</form>
-
-<!-- Search Bar Section -->
-<div style="background-color: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #dee2e6;">
-    <h3>Search Users</h3>
-    <form method="POST" action="/admin_search" style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
-        <input type="text" name="search_query" placeholder="Enter name to search..."
-            value="{{ search_query if search_query else '' }}"
-            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; min-width: 250px;">
-
-        <select name="search_type" style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px;">
-            <option value="all" {{ 'selected' if search_type=='all' else '' }}>All Users</option>
-            <option value="doctors" {{ 'selected' if search_type=='doctors' else '' }}>Doctors</option>
-            <option value="patient" {{ 'selected' if search_type=='patient' else '' }}>Patients</option>
-            <option value="department" {{ 'selected' if search_type=='department' else '' }}>Department</option>
-        </select>
-
-        <button type="submit"
-            style="padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-            Search
-        </button>
-
-        <a href="/admin_dashboard"
-            style="padding: 8px 16px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 4px;">
-            Clear Search
-        </a>
-    </form>
-    
-    {% if search_performed %}
-    <div
-        style="margin-top: 15px; padding: 10px; background-color: #d1ecf1; border: 1px solid #bee5eb; border-radius: 4px;">
-        <strong>Search Results for "{{ search_query }}" in {{ search_type.replace('_', ' ').title() }}:</strong>
-        <br>
-        <small>Found {{ (search_results.patients|length if search_results else patients|length) +
-            (search_results.doctors|length if search_results else doctors|length) }} total results</small>
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <p class="eyebrow">Operations Console</p>
+            <h1>Hospital Administration</h1>
+            <p>Manage departments, doctors, patients, and appointment flow from one place.</p>
+        </div>
     </div>
-    {% endif %}
+
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number">{{ stats.doctors }}</div><div class="stat-label">Doctors</div></div>
+        <div class="stat-card"><div class="stat-number">{{ stats.patients }}</div><div class="stat-label">Patients</div></div>
+        <div class="stat-card"><div class="stat-number">{{ stats.departments }}</div><div class="stat-label">Departments</div></div>
+        <div class="stat-card"><div class="stat-number">{{ stats.appointments }}</div><div class="stat-label">Appointments</div></div>
+    </div>
+
+    <div class="search-container">
+        <form method="POST" action="{{ url_for('admin_search') }}" class="search-form">
+            <input type="text" name="search_query" class="form-control" placeholder="Search by name..." value="{{ search_query if search_query else '' }}">
+            <select name="search_type" class="form-select">
+                <option value="all" {{ 'selected' if search_type=='all' else '' }}>All records</option>
+                <option value="doctors" {{ 'selected' if search_type=='doctors' else '' }}>Doctors</option>
+                <option value="patients" {{ 'selected' if search_type=='patients' else '' }}>Patients</option>
+                <option value="departments" {{ 'selected' if search_type=='departments' else '' }}>Departments</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Clear</a>
+        </form>
+        {% if search_performed %}
+            <p class="small-note">Showing results for "{{ search_query }}".</p>
+        {% endif %}
+    </div>
+
+    <div class="section-heading">
+        <h2>Doctors</h2>
+        <a href="{{ url_for('create_doctor') }}" class="btn btn-success btn-sm">Add Doctor</a>
+    </div>
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr><th>ID</th><th>Name</th><th>Email</th><th>Contact</th><th>Department</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    {% for doctor in doctors %}
+                    <tr>
+                        <td>#{{ doctor.id }}</td>
+                        <td><strong>{{ doctor.username }}</strong></td>
+                        <td>{{ doctor.email }}</td>
+                        <td>{{ doctor.contact }}</td>
+                        <td>{{ doctor.department.name if doctor.department else 'Not assigned' }}</td>
+                        <td><span class="badge badge-{{ doctor.status|status_badge }}">{{ doctor.status|upper }}</span></td>
+                        <td class="action-dropdown">
+                            <a href="{{ url_for('edit_doctor', doctor_id=doctor.id) }}" class="btn btn-info btn-sm">Edit</a>
+                            <a href="{{ url_for('delete_doctor', doctor_id=doctor.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this doctor?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="7" class="empty-state">No doctors found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section-heading">
+        <h2>Patients</h2>
+        <a href="{{ url_for('register') }}" class="btn btn-success btn-sm">Add Patient</a>
+    </div>
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr><th>ID</th><th>Name</th><th>Email</th><th>Contact</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    {% for patient in patients %}
+                    <tr>
+                        <td>#{{ patient.id }}</td>
+                        <td><strong>{{ patient.username }}</strong></td>
+                        <td>{{ patient.email }}</td>
+                        <td>{{ patient.contact }}</td>
+                        <td><span class="badge badge-{{ patient.status|status_badge }}">{{ patient.status|upper }}</span></td>
+                        <td class="action-dropdown">
+                            <a href="{{ url_for('edit_patient', patient_id=patient.id) }}" class="btn btn-info btn-sm">Edit</a>
+                            <a href="{{ url_for('delete_patient', patient_id=patient.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this patient?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6" class="empty-state">No patients found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section-heading">
+        <h2>Departments</h2>
+        <a href="{{ url_for('create_department') }}" class="btn btn-success btn-sm">Add Department</a>
+    </div>
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr><th>ID</th><th>Name</th><th>Description</th><th>Location</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    {% for department in departments %}
+                    <tr>
+                        <td>#{{ department.id }}</td>
+                        <td><strong>{{ department.name }}</strong></td>
+                        <td>{{ department.description }}</td>
+                        <td>{{ department.building }}</td>
+                        <td><span class="badge badge-{{ department.status|status_badge }}">{{ department.status|upper }}</span></td>
+                        <td class="action-dropdown">
+                            <a href="{{ url_for('edit_department', dept_id=department.id) }}" class="btn btn-info btn-sm">Edit</a>
+                            <a href="{{ url_for('delete_department', dept_id=department.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this department?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6" class="empty-state">No departments found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section-heading">
+        <h2>Appointments</h2>
+    </div>
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr><th>ID</th><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Reason</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                    <tr>
+                        <td>#{{ appointment.id }}</td>
+                        <td>{{ appointment.patient.username }}</td>
+                        <td>{{ appointment.doctor.username }}</td>
+                        <td>{{ appointment.date }}</td>
+                        <td>{{ appointment.time }}</td>
+                        <td>{{ appointment.reason or 'Routine consultation' }}</td>
+                        <td><span class="badge badge-{{ appointment.status|status_badge }}">{{ appointment.status|upper }}</span></td>
+                        <td class="action-dropdown">
+                            <a href="{{ url_for('update_appointment', appointment_id=appointment.id, action='completed') }}" class="btn btn-success btn-sm">Complete</a>
+                            <a href="{{ url_for('update_appointment', appointment_id=appointment.id, action='cancelled') }}" class="btn btn-danger btn-sm">Cancel</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="8" class="empty-state">No appointments yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-
-<!-- Doctor section -->
-<div>
-    <h2>Doctor List</h2>
-    <table style="width:100%vw, #f8f9fa;padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #dee2e6;">
-        <thead>
-            <tr><td><button onclick="location.href='/create_doctor'" class="btn btn-success">Create New Doctor</button></td></tr>
-            <tr style="background-color: #f8f9fa;">
-                <th style="padding: 12px; border: 1px solid #dee2e6;">ID</th>
-                <th style="padding: 12px; border: 1px solid #dee2e6;">Username</th>
-                <th style="padding: 12px; border: 1px solid #dee2e6;">Email</th>
-                <th style="padding: 12px; border: 1px solid #dee2e6;">Contact</th>
-                <th style="padding: 12px; border: 1px solid #dee2e6;">Department</th>
-                <th style="padding: 12px; border: 1px solid #dee2e6;">Status</th>
-                <th style="padding: 12px; border: 1px solid #dee2e6;">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for doctor in doctors %}
-            <tr>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">{{ doctor.id }}</td>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">{{ doctor.username }}</td>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">{{ doctor.email }}</td>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">{{ doctor.contact }}</td>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">{{ doctor.dept_id}}</td>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">{{ doctor.status }}</td>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">
-                    <a href="/edit_doctor/{{ doctor.id }} ">Update</a> |
-                    <a href="/delete_doctor/{{ doctor.id }}">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
-
-<!-- Patient Section -->
-<div>
-<h2>Patient List</h2>
-<table style="background-color: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #dee2e6;">
-    <thead>
-        <tr>
-            <td><button onclick="location.href='/register'" class="btn btn-success">Register New Patient</button></td>
-        </tr>
-        <tr style="background-color: #f8f9fa;">
-            <th style="padding: 12px; border: 1px solid #dee2e6;">ID</th>
-            <th style="padding: 12px; border: 1px solid #dee2e6;">Username</th>
-            <th style="padding: 12px; border: 1px solid #dee2e6;">Email</th>
-            <th style="padding: 12px; border: 1px solid #dee2e6;">Contact</th>
-            <td style="padding: 12px; border: 1px solid #dee2e6;">Status</td>
-            <th style="padding: 12px; border: 1px solid #dee2e6;">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for patient in patients %}
-        <tr>
-            <td style="padding: 12px; border: 1px solid #dee2e6;">{{ patient.id }}</td>
-            <td style="padding: 12px; border: 1px solid #dee2e6;">{{ patient.username }}</td>
-            <td style="padding: 12px; border: 1px solid #dee2e6;">{{ patient.email }}</td>
-            <td style="padding: 12px; border: 1px solid #dee2e6;">{{ patient.contact }}</td>
-            <td style="padding: 12px; border: 1px solid #dee2e6;" class=status>{{ patient.status }}</td>
-            <td style="padding: 12px; border: 1px solid #dee2e6;">
-                <a href="/delete_patient/{{ patient.id }}">Delete</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-</div>
-
-
-<!-- Department section -->
-<div>
-    <h2>Department list</h2>
-    <br>
-    <table style="background-color: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #dee2e6;">
-        <thead>
-            <tr><td><button onclick="location.href='/create_department'" class="btn btn-success">Create New Department</button></td></tr>
-            <tr style="background-color: #f8f9fa;">
-                <th style="padding: 12px; border: 1px solid #dee2e6;">ID</th>
-                <th style="padding: 12px; border: 1px solid #dee2e6;">Department Name</th>
-                <th style="padding: 12px; border: 1px solid #dee2e6;">Description</th>
-                <th style="padding: 12px; border: 1px solid #dee2e6;">Location</th>
-                <th style="padding: 12px; border: 1px solid #dee2e6;">Status</th>
-                <th style="padding: 12px; border: 1px solid #dee2e6;">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for department in departments %}
-            <tr>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">{{ department.id }}</td>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">{{department.name}}</td>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">{{department.description}}</td>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">{{department.building}}</td>
-                <td style="padding: 12px; border: 1px solid #dee2e6;" class="status">{{department.status}}</td>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">
-                    <a href="/edit_department/{{department.id}}">Update</a> |
-                    <a href="/delete_department/{{ department.id }}">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
-
-<!-- Appointment section -->
-<div id="appointment-table">
-    <h2>Appointment list</h2>
-    <table style="background-color: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #dee2e6;">
-        <thead>
-            <tr><td><button onclick="location.href='/create_appointment'" class="btn btn-success">Book a appointment</button></td></tr>
-            <tr style="background-color: #f8f9fa;">
-                <th style="padding: 12px; border: 1px solid #dee2e6;">ID</th>
-                <th style="padding: 12px; border: 1px solid #dee2e6;">Doctor Id</th>
-                <th style="padding: 12px; border: 1px solid #dee2e6;">Patient Id</th>
-                <th style="padding: 12px; border: 1px solid #dee2e6;">Time</th>
-                <th style="padding: 12px; border: 1px solid #dee2e6;">Status</th>
-                <th style="padding: 12px; border: 1px solid #dee2e6;">Prescription</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for appointment in appointments %}
-            <tr>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">{{ appointment.id }}</td>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">{{appointment.name}}</td>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">{{appointment.description}}</td>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">{{appointment.building}}</td>
-                <td style="padding: 12px; border: 1px solid #dee2e6;" class="status">{{appointment.status}}</td>
-                <td style="padding: 12px; border: 1px solid #dee2e6;">
-                    <a href="/edit_department/{{depa.id}}">Update</a> |
-                    <a href="/cancel_appointment/{{ appointment.id }}">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-</div>
-
-
-</body>
 {% endblock %}

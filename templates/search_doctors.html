@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}Search Doctors{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1>🏥 Find a Doctor</h1>
+            <p class="text-muted">Search for doctors by name, specialization, or department</p>
+        </div>
+    </div>
+
+    <!-- Search Form -->
+    <div class="row mb-4">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('search_doctors') }}">
+                        <div class="input-group mb-3">
+                            <input type="text" name="search_query" class="form-control form-control-lg" placeholder="Search doctors..." value="{{ request.form.get('search_query', '') }}">
+                            <select name="search_type" class="form-select">
+                                <option value="all" {% if request.form.get('search_type', 'all') == 'all' %}selected{% endif %}>All</option>
+                                <option value="name" {% if request.form.get('search_type') == 'name' %}selected{% endif %}>By Name</option>
+                                <option value="specialization" {% if request.form.get('search_type') == 'specialization' %}selected{% endif %}>By Specialization</option>
+                                <option value="department" {% if request.form.get('search_type') == 'department' %}selected{% endif %}>By Department</option>
+                            </select>
+                            <button class="btn btn-primary btn-lg" type="submit">🔍 Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Filter Buttons -->
+    {% if specializations %}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h5>Filter by Specialization:</h5>
+            <div class="btn-group flex-wrap" role="group">
+                {% for spec in specializations %}
+                <form method="POST" action="{{ url_for('search_doctors') }}" style="display: inline;">
+                    <input type="hidden" name="search_query" value="{{ spec }}">
+                    <input type="hidden" name="search_type" value="specialization">
+                    <button type="submit" class="btn btn-outline-primary">{{ spec }}</button>
+                </form>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Search Results -->
+    <div class="row">
+        {% if doctors %}
+            {% for doctor in doctors %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">👨‍⚕️</div>
+                        <h5 class="card-title">{{ doctor.name }}</h5>
+                        
+                        {% if doctor.specialization %}
+                        <p class="card-text text-muted"><strong>Specialization:</strong><br>{{ doctor.specialization }}</p>
+                        {% endif %}
+                        
+                        {% if doctor.department %}
+                        <p class="card-text"><strong>Department:</strong><br>
+                            <span class="badge bg-info">{{ doctor.department.name }}</span>
+                        </p>
+                        {% endif %}
+                        
+                        <p class="card-text text-muted">
+                            <strong>Contact:</strong><br>
+                            <small>{{ doctor.contact }}</small>
+                        </p>
+
+                        {% if doctor.availability %}
+                        <p class="card-text">
+                            <strong>⏰ Availability:</strong><br>
+                            <small>{{ doctor.availability }}</small>
+                        </p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-light">
+                        <a href="{{ url_for('doctor_profile', doctor_id=doctor.id) }}" class="btn btn-sm btn-primary w-100">
+                            View Profile & Book
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info" role="alert">
+                    <h4 class="alert-heading">No Doctors Found</h4>
+                    <p>{% if request.method == 'POST' %}No doctors match your search criteria. Please try different search terms.{% else %}Browse all available doctors above.{% endif %}</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

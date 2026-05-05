@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Treatment Notes{% endblock %}
+{% block content %}
+<div class="form-shell">
+    <div class="form-panel wide">
+        <p class="eyebrow">Appointment #{{ appointment.id }} · Patient: {{ appointment.patient.name }}</p>
+        <h1>Treatment Record</h1>
+        <form method="POST" action="{{ url_for('create_treatment', appointment_id=appointment.id) }}">
+            <div class="form-group">
+                <label for="diagnosis" class="form-label">Diagnosis</label>
+                <input type="text" id="diagnosis" name="diagnosis" class="form-control" value="{{ treatment.diagnosis if treatment else '' }}" placeholder="Enter diagnosis" required>
+            </div>
+            <div class="form-group">
+                <label for="prescription" class="form-label">Prescription</label>
+                <textarea id="prescription" name="prescription" class="form-control" rows="4" placeholder="Enter prescription details" required>{{ treatment.prescription if treatment else '' }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="notes" class="form-label">Doctor's Notes</label>
+                <textarea id="notes" name="notes" class="form-control" rows="4" placeholder="Enter any additional notes" required>{{ treatment.notes if treatment else '' }}</textarea>
+            </div>
+            <div class="button-row">
+                <button type="submit" class="btn btn-success">Save Record</button>
+                <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

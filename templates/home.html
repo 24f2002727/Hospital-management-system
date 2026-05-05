@@ -1,36 +1,82 @@
-{%extends "base.html" %}
+{% extends "base.html" %}
 {% block content %}
-<body>
-    <div>
-        <div>
-            <h1>Welcome to the Hospital Management System</h1>
-            <img src="static/pexels-pixabay-40568.jpg" height="500px" width="100%vw">
+<div class="home-container">
+    <div class="hero-section">
+        <h1>Hospital Management System</h1>
+        <p>Streamlined patient care, doctor scheduling, and hospital operations</p>
+    </div>
+
+    {% if url_for('static', filename='pexels-pixabay-40568.jpg') %}
+        <img src="{{ url_for('static', filename='pexels-pixabay-40568.jpg') }}" alt="Hospital" class="hero-image">
+    {% endif %}
+
+    <div class="welcome-section">
+        <h2>Welcome to HMS</h2>
+        <p class="lead">A comprehensive healthcare management platform designed for admins, doctors, and patients</p>
+    </div>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">👥</div>
+            <h3>Patient Management</h3>
+            <p>Manage patient records, appointments, and medical history securely in one place</p>
         </div>
-        <div class="container text-center">
-            <p>Book a appointment or login </p>
-            <div class="row">
-                <div class="col">
-                    
-                </div>
-                <div class="col">
-                    <form action="/register" method="get">
-                        <input type="submit" value="Register as new user" class="btn btn-success">
-                    </form>
-                </div>
-                <div class="col">
-                    <form action="/login" method="get">
-                        <input type="submit" value="Login as existing user"
-                            style=" padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                    </form>
-                </div>
-                <div class="col">
-                    
-                </div>   
-            </div>
+        <div class="feature-card">
+            <div class="feature-icon">👨‍⚕️</div>
+            <h3>Doctor Scheduling</h3>
+            <p>Efficient doctor management and department assignment for optimal patient care</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📅</div>
+            <h3>Appointment System</h3>
+            <p>Easy booking and management of appointments with real-time availability</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📋</div>
+            <h3>Medical Reports</h3>
+            <p>Create, view, and manage detailed medical reports and treatment plans</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🏥</div>
+            <h3>Department Management</h3>
+            <p>Organize and manage hospital departments and resources effectively</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>Secure Access</h3>
+            <p>Role-based dashboards with secure authentication for all users</p>
         </div>
     </div>
 
-
-</body>
-
+    <div class="container mt-5 mb-5">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">New User?</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Create an account to get started with our hospital management system. Register as a patient to book appointments and access your medical records.</p>
+                        <form action="{{ url_for('register') }}" method="get">
+                            <button type="submit" class="btn btn-success btn-lg w-100">Register Now</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">Existing User?</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Log in to your account to access the dashboard. Choose your role and enter your credentials to continue with the system.</p>
+                        <form action="{{ url_for('login') }}" method="get">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">Login Here</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
