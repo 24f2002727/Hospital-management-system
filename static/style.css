@@ -50,6 +50,17 @@ body {
     color: var(--primary-dark);
     font-weight: 800;
     letter-spacing: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.brand-icon {
+    font-size: 1.5rem;
+}
+
+.brand-text {
+    font-size: 1.1rem;
 }
 
 .navbar .nav-link {
@@ -493,12 +504,324 @@ footer p {
     margin: 0;
 }
 
+/* Hero Section */
+.hero-section {
+    min-height: 540px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, #0f766e 0%, #1d4ed8 50%, #1e40af 100%);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    position: relative;
+}
+
+.hero-content {
+    max-width: 800px;
+    text-align: center;
+    z-index: 1;
+}
+
+.hero-text h1 {
+    margin: 0 0 1rem;
+    color: #fff;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.2;
+    font-weight: 850;
+}
+
+.hero-subtitle {
+    margin: 0 0 2rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+.hero-cta {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.hero-cta .btn {
+    padding: 0.85rem 2rem;
+    font-size: 1rem;
+}
+
+.btn-outline-primary {
+    background: transparent;
+    color: #fff;
+    border: 2px solid #fff;
+}
+
+.btn-outline-primary:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Stats Showcase */
+.stats-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    padding: 3rem 0;
+}
+
+.stat-item {
+    padding: 2rem;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 15px rgba(24, 32, 47, 0.05);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(24, 32, 47, 0.12);
+}
+
+.stat-value {
+    color: var(--primary);
+    font-size: 2.8rem;
+    font-weight: 850;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.stat-desc {
+    color: var(--muted);
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+/* Services Section */
+.services-section {
+    padding: 3rem 0;
+}
+
+.section-intro {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-intro h2 {
+    color: var(--ink);
+    font-size: 2.2rem;
+    font-weight: 850;
+    margin-bottom: 0.5rem;
+}
+
+.section-intro p {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+}
+
+.service-card {
+    padding: 2rem;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 15px rgba(24, 32, 47, 0.05);
+    transition: all 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(24, 32, 47, 0.12);
+    border-color: var(--primary);
+}
+
+.service-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+}
+
+.service-card h3 {
+    color: var(--ink);
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin: 0 0 0.75rem;
+}
+
+.service-card p {
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Quick Access Section */
+.quick-access {
+    padding: 3rem 0;
+}
+
+.roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.role-card {
+    padding: 2.5rem 2rem;
+    background: var(--panel);
+    border: 2px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 15px rgba(24, 32, 47, 0.05);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.role-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(24, 32, 47, 0.12);
+}
+
+.admin-role { border-top: 4px solid #ec4899; }
+.doctor-role { border-top: 4px solid #22c55e; }
+.patient-role { border-top: 4px solid #3b82f6; }
+
+.role-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.role-card h3 {
+    color: var(--ink);
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem;
+}
+
+.role-card p {
+    color: var(--muted);
+    margin: 0 0 1.5rem;
+    line-height: 1.6;
+}
+
+.role-features {
+    list-style: none;
+    padding: 1rem 0;
+    margin: 1rem 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+}
+
+.role-features li {
+    padding: 0.5rem 0;
+    color: var(--muted);
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.role-features li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--success);
+    font-weight: bold;
+}
+
+/* CTA Section */
+.cta-section {
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, rgba(15, 118, 110, 0.1), rgba(29, 78, 216, 0.1));
+    border-radius: var(--radius);
+    margin: 3rem 0;
+    border: 2px solid var(--line);
+}
+
+.cta-content {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.cta-content h2 {
+    color: var(--ink);
+    font-size: 2rem;
+    font-weight: 850;
+    margin: 0 0 1rem;
+}
+
+.cta-content p {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin: 0 0 2rem;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta-buttons .btn {
+    padding: 0.85rem 2rem;
+    font-size: 1rem;
+}
+
 @media (max-width: 768px) {
     .main-content {
         padding: 1rem;
     }
 
-    .hero-section,
+    .hero-section {
+        padding: 2rem 1rem;
+        min-height: 400px;
+    }
+
+    .hero-text h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .hero-cta {
+        flex-direction: column;
+    }
+
+    .hero-cta .btn {
+        width: 100%;
+    }
+
+    .stats-showcase {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .stat-item {
+        padding: 1.5rem;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .roles-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
     .dashboard-header,
     .form-panel {
         padding: 1.25rem;
@@ -516,5 +839,21 @@ footer p {
 
     .table {
         min-width: 760px;
+    }
+
+    .cta-section {
+        padding: 2rem 1rem;
+    }
+
+    .cta-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+    }
+
+    .cta-buttons .btn {
+        width: 100%;
     }
 }

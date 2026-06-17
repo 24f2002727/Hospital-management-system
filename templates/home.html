@@ -1,82 +1,179 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="home-container">
+    <!-- Hero Section -->
     <div class="hero-section">
-        <h1>Hospital Management System</h1>
-        <p>Streamlined patient care, doctor scheduling, and hospital operations</p>
-    </div>
-
-    {% if url_for('static', filename='pexels-pixabay-40568.jpg') %}
-        <img src="{{ url_for('static', filename='pexels-pixabay-40568.jpg') }}" alt="Hospital" class="hero-image">
-    {% endif %}
-
-    <div class="welcome-section">
-        <h2>Welcome to HMS</h2>
-        <p class="lead">A comprehensive healthcare management platform designed for admins, doctors, and patients</p>
-    </div>
-
-    <div class="features-grid">
-        <div class="feature-card">
-            <div class="feature-icon">👥</div>
-            <h3>Patient Management</h3>
-            <p>Manage patient records, appointments, and medical history securely in one place</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">👨‍⚕️</div>
-            <h3>Doctor Scheduling</h3>
-            <p>Efficient doctor management and department assignment for optimal patient care</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">📅</div>
-            <h3>Appointment System</h3>
-            <p>Easy booking and management of appointments with real-time availability</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">📋</div>
-            <h3>Medical Reports</h3>
-            <p>Create, view, and manage detailed medical reports and treatment plans</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🏥</div>
-            <h3>Department Management</h3>
-            <p>Organize and manage hospital departments and resources effectively</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🔒</div>
-            <h3>Secure Access</h3>
-            <p>Role-based dashboards with secure authentication for all users</p>
-        </div>
-    </div>
-
-    <div class="container mt-5 mb-5">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">New User?</h4>
-                    </div>
-                    <div class="card-body">
-                        <p>Create an account to get started with our hospital management system. Register as a patient to book appointments and access your medical records.</p>
-                        <form action="{{ url_for('register') }}" method="get">
-                            <button type="submit" class="btn btn-success btn-lg w-100">Register Now</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">Existing User?</h4>
-                    </div>
-                    <div class="card-body">
-                        <p>Log in to your account to access the dashboard. Choose your role and enter your credentials to continue with the system.</p>
-                        <form action="{{ url_for('login') }}" method="get">
-                            <button type="submit" class="btn btn-primary btn-lg w-100">Login Here</button>
-                        </form>
-                    </div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Welcome to HMS Care</h1>
+                <p class="hero-subtitle">Excellence in healthcare management and patient care</p>
+                <div class="hero-cta">
+                    {% if not session.get('role') %}
+                        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Get Started</a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">Sign In</a>
+                    {% else %}
+                        <a href="{{ url_for(session.get('role') ~ '_dashboard') }}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Trust & Stats Section -->
+    <div class="stats-showcase mt-5">
+        <div class="stat-item">
+            <div class="stat-value">500+</div>
+            <div class="stat-desc">Active Patients</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">150+</div>
+            <div class="stat-desc">Expert Doctors</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">98%</div>
+            <div class="stat-desc">Satisfaction Rate</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">24/7</div>
+            <div class="stat-desc">Patient Support</div>
+        </div>
+    </div>
+
+    <!-- Key Services Section -->
+    <section class="services-section mt-5">
+        <div class="section-intro">
+            <h2>Our Services</h2>
+            <p>Comprehensive healthcare solutions designed for your well-being</p>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon" style="background: #dbeafe; color: #0284c7;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M8 7a4 4 0 1 1 8 0a4 4 0 0 1-8 0M12 12h9M16.5 9.5v5M12 12h.01"></path>
+                    </svg>
+                </div>
+                <h3>Patient Management</h3>
+                <p>Comprehensive patient records, secure health data storage, and complete medical history tracking</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon" style="background: #dcfce7; color: #16a34a;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                </div>
+                <h3>Doctor Management</h3>
+                <p>Schedule doctors, manage availability, assign departments, and optimize healthcare resources</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon" style="background: #fce7f3; color: #db2777;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <path d="M12 1v6m6-4l-4.24 4.24M23 12h-6m4.24 6l-4.24-4.24M12 23v-6m-6-4l4.24 4.24M1 12h6M4.76 6l4.24 4.24"></path>
+                    </svg>
+                </div>
+                <h3>Appointment Booking</h3>
+                <p>Real-time appointment scheduling, availability checking, and automated confirmations</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon" style="background: #fef3c7; color: #d97706;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
+                <h3>Medical Reports</h3>
+                <p>Generate, manage, and share detailed medical reports and treatment prescriptions securely</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon" style="background: #ede9fe; color: #7c3aed;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L15.09 8.26H22L17.82 12.44L20.91 18.7L12 14.52L3.09 18.7L6.18 12.44L2 8.26H8.91L12 2Z"></path>
+                    </svg>
+                </div>
+                <h3>Department Management</h3>
+                <p>Organize hospital departments, manage resources, and streamline operations efficiently</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon" style="background: #dbeafe; color: #0284c7;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v4"></path>
+                    </svg>
+                </div>
+                <h3>Secure Access</h3>
+                <p>Role-based authentication, data encryption, and HIPAA-compliant security protocols</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Access Section -->
+    <section class="quick-access mt-5">
+        <div class="section-intro">
+            <h2>Quick Access</h2>
+            <p>Choose your role to get started</p>
+        </div>
+
+        <div class="roles-grid">
+            <div class="role-card admin-role">
+                <div class="role-icon">🛡️</div>
+                <h3>Administrator</h3>
+                <p>Manage the entire hospital system, staff, and operations</p>
+                <ul class="role-features">
+                    <li>Dashboard overview</li>
+                    <li>Staff management</li>
+                    <li>System settings</li>
+                </ul>
+                <a href="{{ url_for('login') }}" class="btn btn-sm btn-primary w-100">Admin Login</a>
+            </div>
+
+            <div class="role-card doctor-role">
+                <div class="role-icon">👨‍⚕️</div>
+                <h3>Doctor</h3>
+                <p>Manage patient appointments and medical records</p>
+                <ul class="role-features">
+                    <li>Patient appointments</li>
+                    <li>Medical history</li>
+                    <li>Treatment records</li>
+                </ul>
+                <a href="{{ url_for('login') }}" class="btn btn-sm btn-success w-100">Doctor Login</a>
+            </div>
+
+            <div class="role-card patient-role">
+                <div class="role-icon">🧑‍🤝‍🧑</div>
+                <h3>Patient</h3>
+                <p>Book appointments and manage your health records</p>
+                <ul class="role-features">
+                    <li>Book appointments</li>
+                    <li>View doctors</li>
+                    <li>Health records</li>
+                </ul>
+                {% if session.get('role') == 'patient' %}
+                    <a href="{{ url_for('patient_dashboard') }}" class="btn btn-sm btn-primary w-100">My Dashboard</a>
+                {% else %}
+                    <a href="{{ url_for('register') }}" class="btn btn-sm btn-primary w-100">Register as Patient</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section mt-5">
+        <div class="cta-content">
+            <h2>Ready to get started?</h2>
+            <p>Join HMS Care today and experience seamless healthcare management</p>
+            <div class="cta-buttons">
+                {% if not session.get('role') %}
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Create Account</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">Sign In</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
 </div>
 {% endblock %}

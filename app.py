@@ -7,8 +7,13 @@ from sqlalchemy import inspect, text, and_, or_
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import check_password_hash, generate_password_hash
 
+#import database table
 from models import Admin, Appointment, Department, Doctor, Patient, Treatment, DoctorAvailability, db
 
+#ignore unnecesssary warning
+import warnings
+from sqlalchemy.exc import SAWarning
+warnings.filterwarnings("ignore", category=SAWarning)
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "12346"
