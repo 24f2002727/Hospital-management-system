@@ -26,6 +26,14 @@ app = Flask(
 # Secret key configuration
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "12346")
 
+# Detect serverless environment (Vercel / AWS Lambda)
+is_serverless = bool(
+    os.environ.get("VERCEL")
+    or os.environ.get("VERCEL_ENV")
+    or os.environ.get("AWS_LAMBDA_FUNCTION_NAME")
+    or os.environ.get("LAMBDA_TASK_ROOT")
+    or "/var/task" in BASE_DIR
+)
 
 # Database URI configuration (Supports PostgreSQL / Cloud DB / Vercel tmp SQLite / Local SQLite)
 database_url = os.environ.get("DATABASE_URL")
@@ -34,8 +42,8 @@ if database_url:
     if database_url.startswith("postgres://"):
         database_url = database_url.replace("postgres://", "postgresql://", 1)
     app.config["SQLALCHEMY_DATABASE_URI"] = database_url
-elif os.environ.get("VERCEL"):
-    # On Vercel Serverless Functions, root filesystem is read-only; use /tmp for SQLite
+elif is_serverless:
+    # On serverless platforms, root filesystem is read-only; use /tmp for SQLite
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////tmp/hms.db"
 else:
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///hms.db"
@@ -43,6 +51,7 @@ else:
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
+
 
 
 
@@ -165,7 +174,7 @@ def create_admin():
             try:
                 migrate_database()
             except Exception as e:
-                print(f"Migration note: {e}")
+                pass
             admin = Admin.query.filter_by(username="admin").first()
             if not admin:
                 admin = Admin(
@@ -177,11 +186,35 @@ def create_admin():
                 db.session.add(admin)
                 db.session.commit()
         except Exception as e:
-            print(f"Database initialization note: {e}")
+            pass
 
 
-# Initialize database automatically on startup/import
-create_admin()
+_tables_created = False
+
+@app.before_request
+def ensure_tables_exist():
+    global _tables_created
+    if not _tables_created:
+        try:
+            db.create_all()
+            try:
+                migrate_database()
+            except Exception:
+                pass
+            admin = Admin.query.filter_by(username="admin").first()
+            if not admin:
+                admin = Admin(
+                    username="admin",
+                    email="shivam@gmail.com",
+                    contact="12345678900",
+                    password=generate_password_hash("123456", method="pbkdf2:sha256"),
+                )
+                db.session.add(admin)
+                db.session.commit()
+            _tables_created = True
+        except Exception:
+            pass
+
 
 
 
