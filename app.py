@@ -1,26 +1,42 @@
+import os
+import json
+import warnings
 from functools import wraps
 from datetime import datetime, timedelta
-import json
 
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from sqlalchemy import inspect, text, and_, or_
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, SAWarning
 from werkzeug.security import check_password_hash, generate_password_hash
 
-#import database table
+# import database table
 from models import Admin, Appointment, Department, Doctor, Patient, Treatment, DoctorAvailability, db
 
-#ignore unnecesssary warning
-import warnings
-from sqlalchemy.exc import SAWarning
+# ignore unnecessary warning
 warnings.filterwarnings("ignore", category=SAWarning)
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "12346"
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///hms.db"
+
+# Secret key configuration
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "12346")
+
+# Database URI configuration (Supports PostgreSQL / Cloud DB / Vercel tmp SQLite / Local SQLite)
+database_url = os.environ.get("DATABASE_URL")
+if database_url:
+    # SQLAlchemy requires postgresql:// instead of postgres://
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+elif os.environ.get("VERCEL"):
+    # On Vercel Serverless Functions, root filesystem is read-only; use /tmp for SQLite
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////tmp/hms.db"
+else:
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///hms.db"
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
+
 
 
 def login_required(role=None):
@@ -135,19 +151,31 @@ def migrate_database():
 
 
 def create_admin():
+    """Ensure database tables and default admin exist."""
     with app.app_context():
-        db.create_all()
-        migrate_database()
-        admin = Admin.query.filter_by(username="admin").first()
-        if not admin:
-            admin = Admin(
-                username="admin",
-                email="shivam@gmail.com",
-                contact="12345678900",
-                password=generate_password_hash("123456", method="pbkdf2:sha256"),
-            )
-            db.session.add(admin)
-            db.session.commit()
+        try:
+            db.create_all()
+            try:
+                migrate_database()
+            except Exception as e:
+                print(f"Migration note: {e}")
+            admin = Admin.query.filter_by(username="admin").first()
+            if not admin:
+                admin = Admin(
+                    username="admin",
+                    email="shivam@gmail.com",
+                    contact="12345678900",
+                    password=generate_password_hash("123456", method="pbkdf2:sha256"),
+                )
+                db.session.add(admin)
+                db.session.commit()
+        except Exception as e:
+            print(f"Database initialization note: {e}")
+
+
+# Initialize database automatically on startup/import
+create_admin()
+
 
 
 @app.route("/")
