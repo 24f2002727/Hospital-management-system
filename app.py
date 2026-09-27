@@ -15,10 +15,17 @@ from models import Admin, Appointment, Department, Doctor, Patient, Treatment, D
 # ignore unnecessary warning
 warnings.filterwarnings("ignore", category=SAWarning)
 
-app = Flask(__name__)
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, "templates"),
+    static_folder=os.path.join(BASE_DIR, "static"),
+)
 
 # Secret key configuration
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "12346")
+
 
 # Database URI configuration (Supports PostgreSQL / Cloud DB / Vercel tmp SQLite / Local SQLite)
 database_url = os.environ.get("DATABASE_URL")
